@@ -27,17 +27,13 @@ _LifecycleAware_ interface), as in they support extra operations such as Start,
 Suspend, Resume, Stop, ForceStop etc. Transition of lifecycle states vis-a-vis
 the operations are listed below:
 
-                    start!     suspend!     resume!     stop!     force-stop!
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    READY           RUNNING       ---         ---        ---           ---   
-    
-    RUNNING           ---      SUSPENDED      ---      STOPPED    FORCE_STOPPED
-    
-    SUSPENDED         ---         ---       RUNNING    STOPPED    FORCE_STOPPED
-    
-    STOPPED         RUNNING       ---         ---        ---           ---   
-    
-    FORCE_STOPPED     ---         ---         ---        ---           ---   
+|  Old State   | Start   | Suspend   | Resume  |  Stop   |   ForceStop   |
+|--------------|---------|-----------|---------|---------|---------------|
+|READY         | RUNNING |    ---    |   ---   |   ---   |      ---      |
+|RUNNING       |   ---   | SUSPENDED |   ---   | STOPPED | FORCE_STOPPED |
+|SUSPENDED     |   ---   |    ---    | RUNNING | STOPPED | FORCE_STOPPED |
+|STOPPED       | RUNNING |    ---    |   ---   |   ---   |      ---      |
+|FORCE_STOPPED |   ---   |    ---    |   ---   |   ---   |      ---      |
 
 
 Note: FORCE_STOPPED gets automatically transitioned to STOPPED state on effect.
