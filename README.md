@@ -10,20 +10,20 @@ typically to work in a producer-consumer fashion.
 
 ### Steps for Basic implementation:
 
-1. Instantiate an agent. _DefaultAgent_
-2. Instantiate workers, callbacks and actors (_VolumeActor_ and _AmbientActor_).
+1. Instantiate an agent. (`DefaultAgent` uses fully asynchonous strategy.)
+2. Instantiate workers (`Worker`), callbacks (`Callback`) and actors (`VolumeActor` and `AmbientActor`).
 3. Start the agent.
 
 ### Notes on mailboxes:
 
- 1. Mailbox is an interface, and the default implementation is in-memory queue.
- 2. For distributed pipelines you may like to implement Mailbox using RabbitMQ,
-    HornetQ, Beanstalkd etc.
+1. `Mailbox` is an interface, and the default implementation is in-memory queue.
+2. For distributed pipelines you may like to implement Mailbox using RabbitMQ,
+   HornetQ, Beanstalkd etc.
 
 ### Lifecycle support:
 
 Agents and actors can be decorated with lifecycle support (implementing the
-_LifecycleAware_ interface), as in they support extra operations such as Start,
+`LifecycleAware` interface), as in they support extra operations such as Start,
 Suspend, Resume, Stop, ForceStop etc. Transition of lifecycle states vis-a-vis
 the operations are listed below:
 
