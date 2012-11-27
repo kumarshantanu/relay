@@ -10,7 +10,7 @@ typically to work in a producer-consumer fashion.
 
 ### Steps for Basic implementation:
 
-1. Instantiate an agent. (`DefaultAgent` uses fully asynchonous strategy.)
+1. Instantiate an agent. (`PurgingAgent` uses fully asynchonous strategy.)
 2. Instantiate workers (`Worker`), callbacks (`Callback`) and actors (`VolumeActor` and `AmbientActor`).
 3. Start the agent.
 

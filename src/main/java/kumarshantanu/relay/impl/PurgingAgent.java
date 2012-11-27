@@ -7,28 +7,28 @@ import java.util.concurrent.Future;
 import kumarshantanu.relay.Actor;
 import kumarshantanu.relay.Agent;
 
-public class DefaultAgent implements Agent {
+public class PurgingAgent implements Agent {
 	
 	public final AgentCommon agentCommon = new AgentCommon();
 	
 	public final long idleMillis;
 	public final ExecutorService threadPool;
 	
-	public DefaultAgent(ExecutorService threadPool, long idleMillis) {
+	public PurgingAgent(ExecutorService threadPool, long idleMillis) {
 		this.idleMillis = idleMillis;
 		this.threadPool = threadPool;
 	}
 	
-	public DefaultAgent(int threadCount, long idleMillis) {
+	public PurgingAgent(int threadCount, long idleMillis) {
 		this(threadCount > 0? Executors.newFixedThreadPool(threadCount):
 			Executors.newCachedThreadPool(), idleMillis);
 	}
 	
-	public DefaultAgent(int threadCount) {
+	public PurgingAgent(int threadCount) {
 		this(threadCount, 200L);
 	}
 	
-	public DefaultAgent() {
+	public PurgingAgent() {
 		this(Runtime.getRuntime().availableProcessors() * 2 + 1);
 	}
 	
