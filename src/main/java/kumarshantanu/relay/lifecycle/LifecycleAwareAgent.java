@@ -1,7 +1,6 @@
 package kumarshantanu.relay.lifecycle;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import kumarshantanu.relay.Actor;
@@ -25,8 +24,7 @@ public class LifecycleAwareAgent extends AbstractLifecycleAware implements Agent
 	}
 	
 	public LifecycleAwareAgent(String name, int threadCount, long idleMillis) {
-		this(name, threadCount > 0? Executors.newFixedThreadPool(threadCount):
-			Executors.newCachedThreadPool(), idleMillis);
+		this(name, Util.newThreadPool(threadCount), idleMillis);
 	}
 	
 	public LifecycleAwareAgent(String name, int threadCount) {
@@ -34,7 +32,7 @@ public class LifecycleAwareAgent extends AbstractLifecycleAware implements Agent
 	}
 	
 	public LifecycleAwareAgent(String name) {
-		this(name, Runtime.getRuntime().availableProcessors() * 2 + 1);
+		this(name, Util.optimumThreadCount());
 	}
 	
 	@Override
@@ -77,6 +75,10 @@ public class LifecycleAwareAgent extends AbstractLifecycleAware implements Agent
 	
 	public void register(Actor<?, ?> actor) {
 		agentCommon.register(actor);
+	}
+	
+	public void unregister(Actor<?, ?> actor) {
+		agentCommon.unregister(actor);
 	}
 	
 	public Actor<?, ?> findActor(String name) {

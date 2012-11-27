@@ -1,7 +1,6 @@
 package kumarshantanu.relay.impl;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import kumarshantanu.relay.Actor;
@@ -20,8 +19,7 @@ public class PurgingAgent implements Agent {
 	}
 	
 	public PurgingAgent(int threadCount, long idleMillis) {
-		this(threadCount > 0? Executors.newFixedThreadPool(threadCount):
-			Executors.newCachedThreadPool(), idleMillis);
+		this(Util.newThreadPool(threadCount), idleMillis);
 	}
 	
 	public PurgingAgent(int threadCount) {
@@ -29,7 +27,7 @@ public class PurgingAgent implements Agent {
 	}
 	
 	public PurgingAgent() {
-		this(Runtime.getRuntime().availableProcessors() * 2 + 1);
+		this(Util.optimumThreadCount());
 	}
 	
 	public void run() {
@@ -61,8 +59,14 @@ public class PurgingAgent implements Agent {
 		}
 	}
 	
+	// ----- Actor implementation -----
+	
 	public void register(Actor<?, ?> actor) {
 		agentCommon.register(actor);
+	}
+	
+	public void unregister(Actor<?, ?> actor) {
+		agentCommon.unregister(actor);
 	}
 	
 	public Actor<?, ?> findActor(String name) {

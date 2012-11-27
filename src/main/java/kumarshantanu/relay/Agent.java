@@ -19,6 +19,13 @@ public interface Agent extends Runnable {
 	public void register(Actor<?, ?> actor);
 
 	/**
+	 * Unregister actor from the agent, and stop processing its mailbox
+	 * messages.
+	 * @param actor
+	 */
+	public void unregister(Actor<?, ?> actor);
+
+	/**
 	 * Ensure that the actor will not be garbage collected until its mailbox is
 	 * empty. Whether the actor will be garbage collected after the mailbox is
 	 * empty depends on whether you hold a reference to the actor.

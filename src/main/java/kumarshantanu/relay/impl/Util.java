@@ -2,6 +2,8 @@ package kumarshantanu.relay.impl;
 
 import java.util.Queue;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import kumarshantanu.relay.Callback;
 import kumarshantanu.relay.Mailbox;
@@ -27,6 +29,19 @@ public class Util {
 	public static void positiveLong(long x) {
 		if (x <= 0) throw new IllegalArgumentException(
 				"Expected positive long but found " + x);
+	}
+
+	// optimum for CPU-bound jobs only
+	public static int optimumThreadCount() {
+		return Runtime.getRuntime().availableProcessors() * 2 + 1;
+	}
+
+	public static ExecutorService newThreadPool() {
+		return newThreadPool(optimumThreadCount());
+	}
+	public static ExecutorService newThreadPool(int threadCount) {
+		return threadCount > 0? Executors.newFixedThreadPool(threadCount):
+			Executors.newCachedThreadPool();
 	}
 
 	public static void sleep(long millis) {

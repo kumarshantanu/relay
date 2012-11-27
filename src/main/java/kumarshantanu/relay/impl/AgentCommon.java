@@ -1,9 +1,7 @@
 package kumarshantanu.relay.impl;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -20,8 +18,8 @@ import kumarshantanu.relay.Agent;
  */
 public class AgentCommon implements Agent {
 
-	public final Map<String, WeakReference<Actor<?, ?>>> ACTORS =
-			new ConcurrentHashMap<String, WeakReference<Actor<?,?>>>();
+	public final Map<String, Actor<?, ?>> ACTORS =
+			new ConcurrentHashMap<String, Actor<?, ?>>();
 	
 	public final Collection<Actor<?, ?>> DRAIN_ACTORS =
 			new ConcurrentLinkedQueue<Actor<?,?>>();
@@ -53,40 +51,28 @@ public class AgentCommon implements Agent {
 	}
 	
 	public void run() {
-		// we do not implement Runnable in this class
+		throw new IllegalStateException("AgentCommon not meant for invocation");
 	}
 
 	// ----- Agent methods -----
 	
 	public void register(Actor<?, ?> actor) {
 		Util.notNull(actor, "actor");
-		ACTORS.put(actor.getActorId().getActorName(),
-				new WeakReference<Actor<?,?>>(actor));
+		ACTORS.put(actor.getActorId().getActorName(), actor);
+	}
+	
+	public void unregister(Actor<?, ?> actor) {
+		Util.notNull(actor, "actor");
+		ACTORS.remove(actor.getActorId().getActorName());
 	}
 	
 	public Actor<?, ?> findActor(String name) {
 		Util.notNull(name, "name");
-		WeakReference<Actor<?, ?>> ref = ACTORS.get(name);
-		if (ref == null) {
-			return null;
-		}
-		Actor<?, ?> a = ref.get();
-		if (a == null) {
-			ACTORS.remove(name);
-		}
-		return a;
+		return ACTORS.get(name);
 	}
 
 	public Iterable<Actor<?, ?>> listActors() {
-		List<Actor<?, ?>> actors = new ArrayList<Actor<?,?>>();
-		for (String name: ACTORS.keySet()) {
-			WeakReference<Actor<?, ?>> eachRef = ACTORS.get(name);
-			Actor<?, ?> each = eachRef==null? null: eachRef.get();
-			if (each!=null) {
-				actors.add(each);
-			}
-		}
-		return actors;
+		return new ArrayList<Actor<?, ?>>(ACTORS.values());
 	}
 
 	public void drain(Actor<?, ?> actor) {
