@@ -6,7 +6,7 @@ import java.util.List;
 import kumarshantanu.relay.Actor;
 import kumarshantanu.relay.Agent;
 
-public class Intospection {
+public class Introspection {
 
 	public static List<AgentInfo> takeSnapshot() {
 		List<AgentInfo> agentInfo = new ArrayList<AgentInfo>();
