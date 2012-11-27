@@ -6,7 +6,7 @@ import kumarshantanu.relay.Actor;
 import kumarshantanu.relay.Callback;
 import kumarshantanu.relay.MailboxException;
 import kumarshantanu.relay.impl.AmbientActor;
-import kumarshantanu.relay.impl.PurgingAgent;
+import kumarshantanu.relay.impl.DefaultAgent;
 import kumarshantanu.relay.monitoring.ThroughputAware;
 
 import org.junit.Assert;
@@ -18,7 +18,7 @@ public class MorganAsyncTest {
 	public void test() {
 		Assert.assertTrue("Test started", true);
 		final AtomicLong counter = new AtomicLong();
-		PurgingAgent ag = new PurgingAgent(8);
+		DefaultAgent ag = new DefaultAgent(8);
 		final Callback<String> callback = new Callback<String>() {
 			public void onReturn(String value) {
 				counter.incrementAndGet();
