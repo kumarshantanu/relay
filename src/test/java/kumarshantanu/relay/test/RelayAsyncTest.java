@@ -12,7 +12,7 @@ import kumarshantanu.relay.monitoring.ThroughputAware;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class MorganAsyncTest {
+public class RelayAsyncTest {
 	
 	@Test
 	public void test() {
