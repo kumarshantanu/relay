@@ -3,10 +3,12 @@ package kumarshantanu.relay.test;
 import java.util.concurrent.atomic.AtomicLong;
 
 import kumarshantanu.relay.Actor;
+import kumarshantanu.relay.Agent;
 import kumarshantanu.relay.Callback;
 import kumarshantanu.relay.MailboxException;
 import kumarshantanu.relay.impl.AmbientActor;
 import kumarshantanu.relay.impl.DefaultAgent;
+import kumarshantanu.relay.impl.VolumeActor;
 import kumarshantanu.relay.monitoring.ThroughputAware;
 
 import org.junit.Assert;
@@ -14,8 +16,41 @@ import org.junit.Test;
 
 public class RelayAsyncTest {
 	
+	private interface ActorFactory {
+		public Actor<String, String> create(Agent ag, Callback<String> callback);
+	}
+	
 	@Test
-	public void test() {
+	public void ambientActorTest() {
+		test(new ActorFactory() {
+			public Actor<String, String> create(Agent ag,
+					Callback<String> callback) {
+				return new AmbientActor<String, String>(ag, callback, null, null, null) {
+					@Override
+					public String execute(String req) {
+						return req;
+					}
+				};
+			}
+		});
+	}
+	
+	@Test
+	public void volumeActorTest() {
+		test(new ActorFactory() {
+			public Actor<String, String> create(Agent ag,
+					Callback<String> callback) {
+				return new VolumeActor<String, String>(ag, callback, null, null, null) {
+					@Override
+					public String execute(String req) {
+						return req;
+					}
+				};
+			}
+		});
+	}
+	
+	public void test(ActorFactory afactory) {
 		Assert.assertTrue("Test started", true);
 		final AtomicLong counter = new AtomicLong();
 		DefaultAgent ag = new DefaultAgent(8);
@@ -27,17 +62,11 @@ public class RelayAsyncTest {
 				ex.printStackTrace();
 			}
 		};
-		final Actor<String, String> ac =
-				new AmbientActor<String, String>(ag, callback, null, null, null) {
-			@Override
-			public String execute(String req) {
-				return req;
-			}
-		};
+		final Actor<String, String> ac = afactory.create(ag, callback);
 		Runnable sender = new Runnable() {
 			public void run() {
 				try {
-					ac.send("Hello World!", callback);
+					ac.send("Hello World!");
 				} catch (MailboxException e) {
 					e.printStackTrace();
 				}
