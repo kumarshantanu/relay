@@ -10,8 +10,9 @@ typically to work in a producer-consumer fashion.
 
 ### Steps for Basic implementation:
 
-1. Instantiate an agent. (`PurgingAgent` uses fully asynchonous strategy.)
-2. Instantiate workers (`Worker`), callbacks (`Callback`) and actors (`VolumeActor` and `AmbientActor`).
+0. (Optional) Instantiate a threadpool `ExecutorService`; use it to instantiate agent.
+1. Instantiate an agent. (`DefaultAgent` uses fully asynchonous strategy.)
+2. Instantiate workers (`Worker`), callbacks (`Callback`) and actors (`DefaultActor` or `AmbientActor`).
 3. Start the agent.
 
 ### Notes on mailboxes:

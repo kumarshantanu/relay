@@ -7,8 +7,8 @@ import kumarshantanu.relay.Agent;
 import kumarshantanu.relay.Callback;
 import kumarshantanu.relay.MailboxException;
 import kumarshantanu.relay.impl.AmbientActor;
+import kumarshantanu.relay.impl.DefaultActor;
 import kumarshantanu.relay.impl.DefaultAgent;
-import kumarshantanu.relay.impl.VolumeActor;
 import kumarshantanu.relay.monitoring.ThroughputAware;
 
 import org.junit.Assert;
@@ -36,11 +36,11 @@ public class RelayAsyncTest {
 	}
 	
 	@Test
-	public void volumeActorTest() {
+	public void defaultActorTest() {
 		test(new ActorFactory() {
 			public Actor<String, String> create(Agent ag,
 					Callback<String> callback) {
-				return new VolumeActor<String, String>(ag, callback, null, null, null) {
+				return new DefaultActor<String, String>(ag, callback, null, null, null) {
 					@Override
 					public String execute(String req) {
 						return req;

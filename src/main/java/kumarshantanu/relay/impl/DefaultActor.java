@@ -9,21 +9,22 @@ import kumarshantanu.relay.Mailbox;
 import kumarshantanu.relay.MailboxException;
 
 /**
- * VolumeActor can have large number of messages in its mailbox without memory
- * overhead. On the flip side, it does not support the interactive
- * <tt>send(message, callback)</tt> method.
+ * DefaultActor stores messages as-it-is in its mailbox, hence compared to
+ * <tt>AmbientActor<tt> it can have a large number of messages in its mailbox
+ * without memory overhead; on the flip side, it does not support the
+ * interactive <tt>send(message, callback)</tt> method.
  * @author Shantanu Kumar (kumar.shantanu@gmail.com)
  *
  * @param <RequestType>
  * @param <ReturnType>
  */
-public abstract class VolumeActor<RequestType, ReturnType>
+public abstract class DefaultActor<RequestType, ReturnType>
 extends AbstractActor<RequestType, ReturnType> {
 
 	public final Mailbox<RequestType> mailbox;
 	public final Callback<ReturnType> callback;
 
-	public VolumeActor(Agent agent, Callback<ReturnType> callback,
+	public DefaultActor(Agent agent, Callback<ReturnType> callback,
 			Mailbox<RequestType> mailbox,
 			String actorName, ActorId parentActor) {
 		super(parentActor, actorName);
@@ -41,7 +42,7 @@ extends AbstractActor<RequestType, ReturnType> {
 		agent.register(this);
 	}
 
-	public VolumeActor(Agent agent) {
+	public DefaultActor(Agent agent) {
 		this(agent, null, null, null, null);
 	}
 
