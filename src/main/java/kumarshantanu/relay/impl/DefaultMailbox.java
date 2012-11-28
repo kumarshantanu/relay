@@ -48,6 +48,6 @@ public class DefaultMailbox<RequestType> implements Mailbox<RequestType> {
 
 	public boolean cancel(RequestType message) {
 		return false;
-	};
+	}
 
 }
