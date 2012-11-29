@@ -22,7 +22,7 @@ public class PingPongTest {
 	@Test
 	public void test() {
 		Assert.assertTrue("Test started", true);
-		ExecutorService threadPool = Util.newThreadPool(2);
+		ExecutorService threadPool = Util.newThreadPool();
 		DefaultAgent ag = new DefaultAgent(threadPool);
 		PingActor ping = new PingActor(ag);
 		PongActor pong = new PongActor(ag);
@@ -32,8 +32,8 @@ public class PingPongTest {
 		Runnable dummy = new Runnable() {
 			public void run() {}
 		};
-		final int WARM_UP = 100;
-		final int PERF_TEST = 250;
+		final int WARM_UP = 10000;
+		final int PERF_TEST = 25000;
 		Helper h = new Helper();
 		threadPool.execute(ag);
 		System.out.println(Actor.CURRENT_ACTOR_ID.get());
