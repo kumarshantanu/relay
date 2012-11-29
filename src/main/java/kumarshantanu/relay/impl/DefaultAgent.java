@@ -26,6 +26,10 @@ public class DefaultAgent implements Agent {
 		this(threadCount, 200L);
 	}
 	
+	public DefaultAgent(ExecutorService threadPool) {
+		this(threadPool, 200L);
+	}
+	
 	public DefaultAgent() {
 		this(Util.optimumThreadCount());
 	}
