@@ -37,11 +37,13 @@ public class DefaultAgent implements Agent {
 	public void run() {
 		ALL_AGENTS.add(this);
 		boolean toSleep = false;
+		long steppingIdleMillis = 1;
 		long now = System.currentTimeMillis();
 		long drainerTime = now;
 		Future<?> drainer = null;
 		while (true) {
 			toSleep = true;
+			steppingIdleMillis = Math.min(steppingIdleMillis * 2, idleMillis);
 			now = System.currentTimeMillis();
 			if (now - drainerTime > 1000) {  // check no more than once a second
 				drainerTime = now;
@@ -53,12 +55,13 @@ public class DefaultAgent implements Agent {
 					Runnable r = a.poll(a.getActorId());
 					if (r != null) {
 						toSleep = false;
+						steppingIdleMillis = 1;
 						threadPool.execute(r);
 					}
 				}
 			}
 			if (toSleep) {
-				Util.sleep(idleMillis);
+				Util.sleep(steppingIdleMillis);
 			}
 		}
 	}
