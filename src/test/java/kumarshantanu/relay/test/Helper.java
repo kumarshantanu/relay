@@ -16,7 +16,7 @@ public class Helper {
 		long stop = System.currentTimeMillis();
 		long dur = stop - start;
 		System.out.println("" + msg + " done at " + stop + "ms, dur="
-		+ dur + "ms, count=" + n + ", avg/ms=" + (n / dur));
+		+ dur + "ms, count=" + n + ", avg/ms=" + (dur==0? n: (n / dur)));
 	}
 
 	public void doTimes(int n, AtomicLong counter, Runnable sender, String phase) {
