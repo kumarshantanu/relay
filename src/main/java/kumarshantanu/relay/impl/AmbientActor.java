@@ -33,11 +33,7 @@ extends AbstractActor<RequestType, ReturnType> {
 			String actorName, ActorId parentActor) {
 		super(parentActor, actorName);
 		Util.notNull(agent, "agent");
-		if (callback != null) {
-			this.callback = callback;
-		} else {
-			this.callback = new DummyCallback<ReturnType>();
-		}
+		this.callback = callback;
 		if (mailbox != null) {
 			this.mailbox = mailbox;
 		} else {
@@ -67,16 +63,20 @@ extends AbstractActor<RequestType, ReturnType> {
 			try {
 				tvcKeeper.incrementBy(1);
 				ReturnType val = execute(msgHandler.message);
-				try {
-					msgHandler.handler.onReturn(val);
-				} catch (Exception e) {
-					// ignore callback exceptions
+				if (msgHandler.handler != null) {
+					try {
+						msgHandler.handler.onReturn(val);
+					} catch (Exception e) {
+						// ignore callback exceptions
+					}
 				}
 			} catch (Exception e) {
-				try {
-					msgHandler.handler.onException(e);
-				} catch (Exception f) {
-					// ignore callback exceptions
+				if (msgHandler.handler != null) {
+					try {
+						msgHandler.handler.onException(e);
+					} catch (Exception f) {
+						// ignore callback exceptions
+					}
 				}
 			}
 		}
