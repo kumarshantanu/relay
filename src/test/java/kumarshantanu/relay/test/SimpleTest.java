@@ -14,7 +14,7 @@ import kumarshantanu.relay.monitoring.ThroughputAware;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class RelayAsyncTest {
+public class SimpleTest {
 	
 	private interface ActorFactory {
 		public Actor<String, String> create(Agent ag, Callback<String> callback);
