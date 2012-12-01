@@ -4,9 +4,16 @@
 
 ## 2012-Nov-?? / 0.1.0
 
-* default agent (polls registered actors sequentially)
-* default actor
-* ambient actor [TODO] responsiveness test
-* batch actor [TODO] batch test
-* polling actor [TODO] polling test
+* Abstractions
+  * Actor
+  * Agent
+  * Callback
+  * Mailbox
+  * Worker
+* Implementation
+  * DefaultAgent (polls registered actors sequentially)
+  * DefaultActor
+  * AmbientActor
+  * BatchActor [TODO] batch test
+  * PollingActor [TODO] polling test
 * [TODO] documentation
