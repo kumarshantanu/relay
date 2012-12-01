@@ -1,5 +1,6 @@
 package kumarshantanu.relay.test;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
 
 import kumarshantanu.relay.Actor;
@@ -9,6 +10,7 @@ import kumarshantanu.relay.MailboxException;
 import kumarshantanu.relay.impl.AmbientActor;
 import kumarshantanu.relay.impl.DefaultActor;
 import kumarshantanu.relay.impl.DefaultAgent;
+import kumarshantanu.relay.impl.Util;
 import kumarshantanu.relay.monitoring.ThroughputAware;
 
 import org.junit.Assert;
@@ -53,7 +55,8 @@ public class SimpleTest {
 	public void test(ActorFactory afactory) {
 		Assert.assertTrue("Test started", true);
 		final AtomicLong counter = new AtomicLong();
-		DefaultAgent ag = new DefaultAgent(8);
+		ExecutorService threadPool = Util.newThreadPool();
+		DefaultAgent ag = new DefaultAgent(threadPool);
 		final Callback<String> callback = new Callback<String>() {
 			public void onReturn(String value) {
 				counter.incrementAndGet();
@@ -73,7 +76,7 @@ public class SimpleTest {
 			}
 		};
 		Helper h = new Helper();
-		new Thread(ag).start();
+		threadPool.execute(ag);
 		System.out.println(Actor.CURRENT_ACTOR_ID.get());
 		h.doTimes(1000000, counter, sender, "Warm up");
 		System.out.println(((ThroughputAware) ac).getThroughputString());
