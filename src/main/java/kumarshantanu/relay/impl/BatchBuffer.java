@@ -1,4 +1,4 @@
-package kumarshantanu.relay.batch;
+package kumarshantanu.relay.impl;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
