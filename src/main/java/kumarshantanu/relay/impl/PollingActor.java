@@ -28,6 +28,14 @@ public abstract class PollingActor<ReturnType> extends AbstractActor<Object, Ret
 		agent.register(this);
 	}
 
+	public PollingActor(Agent ag, Callback<ReturnType> callback) {
+		this(ag, callback, null, null);
+	}
+
+	public PollingActor(Agent ag) {
+		this(ag, null, null, null);
+	}
+
 	public abstract boolean poll();
 
 	// ----- internal stuff -----
