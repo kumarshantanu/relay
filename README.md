@@ -8,18 +8,40 @@ typically to work in a producer-consumer fashion.
 
 ## Usage
 
-### Steps for Basic implementation:
 
-0. (Optional) Instantiate a threadpool `ExecutorService`; use it to instantiate agent.
-1. Instantiate an agent. (`DefaultAgent` uses fully asynchonous strategy.)
-2. Instantiate workers (`Worker`), callbacks (`Callback`) and actors (`DefaultActor` or `AmbientActor`).
-3. Start the agent.
+### Quickstart
+
+Imports:
+
+```java
+import java.util.concurrent.ExecutorService;
+
+import kumarshantanu.relay.impl.DefaultActor;
+import kumarshantanu.relay.impl.DefaultAgent;
+import kumarshantanu.relay.impl.Util;
+```
+
+Instantiate an actor; send message to it:
+
+```java
+ExecutorService threadPool = Util.newThreadPool(); // instantiate a thread-pool
+DefaultAgent ag = new DefaultAgent(threadPool);    // instantiate an agent
+DefaultActor<String, String> actor = new DefaultActor<String, String> {
+    @Override
+    public String execute(String req) {
+        return "Received message: " + req;        // actual processing here
+    }
+};                      // instantiate an actor
+threadPool.execute(ag); // start the agent (same thread-pool not necessary)
+actor.send("foo");      // send message to the actor
+```
 
 ### Notes on mailboxes:
 
 1. `Mailbox` is an interface, and the default implementation is in-memory queue.
 2. For distributed pipelines you may like to implement Mailbox using RabbitMQ,
    HornetQ, Beanstalkd etc.
+
 
 ### Lifecycle support:
 
