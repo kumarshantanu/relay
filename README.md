@@ -5,6 +5,7 @@ Actor model implementation for data processing pipelines in Java.
 This projects helps setup concurrent data-pipelines using actors and mailboxes,
 typically to work in a producer-consumer fashion.
 
+**Important:** _Early days for the project. API and implementation might change._
 
 ## Usage
 
@@ -21,45 +22,35 @@ import kumarshantanu.relay.impl.DefaultAgent;
 import kumarshantanu.relay.impl.Util;
 ```
 
-Instantiate an actor; send message to it:
+Instantiate actors; send messages to them:
 
 ```java
 ExecutorService threadPool = Util.newThreadPool(); // instantiate a thread-pool
 DefaultAgent ag = new DefaultAgent(threadPool);    // instantiate an agent
-DefaultActor<String, String> actor = new DefaultActor<String, String> {
+final DefaultActor<String, String> actorB = new DefaultActor<String, String> {
     @Override
     public String execute(String req) {
-        return "Received message: " + req;        // actual processing here
+        String ret = "Received message: " + req;
+        System.out.println(ret);
+        return ret;     // actual processing here
     }
-};                      // instantiate an actor
+};                      // instantiate actor B
+DefaultActor<String, String> actorA = new DefaultActor<String, String> {
+    @Override
+    public String execute(String req) {
+        String ret = "Forwarding message: " + req;
+        actorB.send(ret);
+        System.out.println(ret);
+        return ret;     // actual processing here
+    }
+};                      // instantiate actor A
 threadPool.execute(ag); // start the agent (same thread-pool not necessary)
 actor.send("foo");      // send message to the actor
 ```
 
-### Notes on mailboxes:
+### Documentation
 
-1. `Mailbox` is an interface, and the default implementation is in-memory queue.
-2. For distributed pipelines you may like to implement Mailbox using RabbitMQ,
-   HornetQ, Beanstalkd etc.
-
-
-### Lifecycle support:
-
-Agents and actors can be decorated with lifecycle support (implementing the
-`LifecycleAware` interface), as in they support extra operations such as Start,
-Suspend, Resume, Stop, ForceStop etc. Transition of lifecycle states vis-a-vis
-the operations are listed below:
-
-|  Old State   | Start   | Suspend   | Resume  |  Stop   |   ForceStop   |
-|--------------|---------|-----------|---------|---------|---------------|
-|READY         | RUNNING |    ---    |   ---   |   ---   |      ---      |
-|RUNNING       |   ---   | SUSPENDED |   ---   | STOPPED | FORCE_STOPPED |
-|SUSPENDED     |   ---   |    ---    | RUNNING | STOPPED | FORCE_STOPPED |
-|STOPPED       | RUNNING |    ---    |   ---   |   ---   |      ---      |
-|FORCE_STOPPED |   ---   |    ---    |   ---   |   ---   |      ---      |
-
-
-Note: FORCE_STOPPED gets automatically transitioned to STOPPED state on effect.
+Please refer the doc/intro.md file in this repo.
 
 
 ## License
