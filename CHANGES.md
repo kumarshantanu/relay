@@ -14,6 +14,6 @@
   * DefaultAgent (polls registered actors sequentially)
   * DefaultActor
   * AmbientActor
-  * BatchActor [TODO] batch test
-  * PollingActor [TODO] polling test
+  * BatchActor
+  * PollingActor
 * [TODO] documentation
