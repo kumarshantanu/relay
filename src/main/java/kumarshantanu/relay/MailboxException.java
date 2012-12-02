@@ -5,7 +5,7 @@ package kumarshantanu.relay;
  * @author Shantanu Kumar (kumar.shantanu@gmail.com)
  *
  */
-public class MailboxException extends Exception {
+public class MailboxException extends RuntimeException {
 	
 	/**
 	 * serialVersionUUID
