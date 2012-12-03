@@ -2,7 +2,7 @@
 
 ## TODO
 
-## 2012-Nov-?? / 0.1.0
+## 2012-Dec-?? / 0.1.0
 
 * Abstractions
   * Actor
@@ -16,4 +16,7 @@
   * AmbientActor
   * BatchActor
   * PollingActor
-* [TODO] documentation
+  * DefaultMailbox
+  * JMSMailbox (tested with JMS API using embedded ActiveMQ broker)
+* [TODO] Distinguish local and potentially-remote actors, possibly drop Callback
+* Documentation
