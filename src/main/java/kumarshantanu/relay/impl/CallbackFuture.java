@@ -7,6 +7,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.Callback;
 import kumarshantanu.relay.Mailbox;
 
@@ -15,6 +16,7 @@ implements Callback<ReturnType>, Future<ReturnType> {
 
 	public final Object LOCK = new Object();
 
+	public final ActorID actorID;
 	public final Callback<ReturnType> orig;
 	public final Mailbox<MailboxType> mbox;
 	public final MailboxType message;
@@ -26,9 +28,10 @@ implements Callback<ReturnType>, Future<ReturnType> {
 	public volatile ReturnType value = null;
 	public volatile Exception exception = null; // is related to isCancelled()
 
-	public CallbackFuture(Callback<ReturnType> orig,
+	public CallbackFuture(ActorID actorID, Callback<ReturnType> orig,
 			Mailbox<MailboxType> mbox, RequestType request,
 			MsgAdapter<RequestType, ReturnType, MailboxType> adapter) {
+		this.actorID = actorID;
 		this.orig = orig;
 		this.mbox = mbox;
 		this.message = adapter.convert(request, this);
@@ -36,7 +39,7 @@ implements Callback<ReturnType>, Future<ReturnType> {
 
 	public boolean cancelMessage() {
 		synchronized (LOCK) {
-			return cancelled || setCancelled(mbox.cancel(message));
+			return cancelled || setCancelled(mbox.cancel(message, actorID));
 		}
 	}
 

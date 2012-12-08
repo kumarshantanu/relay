@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.Callback;
 import kumarshantanu.relay.Mailbox;
 import kumarshantanu.relay.MailboxException;
@@ -58,7 +59,7 @@ public class Util {
 			public boolean isEmpty() {
 				return queue.isEmpty();
 			}
-			public void add(T message) throws MailboxException {
+			public void add(T message, ActorID actorID) throws MailboxException {
 				try {
 					queue.add(message);
 				} catch (RuntimeException e) {
@@ -68,7 +69,7 @@ public class Util {
 			public T poll() {
 				return queue.poll();
 			}
-			public boolean cancel(T message) {
+			public boolean cancel(T message, ActorID actorID) {
 				return false;
 			};
 		};

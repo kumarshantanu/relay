@@ -3,6 +3,7 @@ package kumarshantanu.relay.impl;
 import java.util.LinkedList;
 import java.util.concurrent.Semaphore;
 
+import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.Mailbox;
 
 /**
@@ -28,7 +29,7 @@ public class DefaultMailbox<RequestType> implements Mailbox<RequestType> {
 		}
 	}
 	
-	public void add(RequestType message) {
+	public void add(RequestType message, ActorID actorID) {
 		sem.acquireUninterruptibly();
 		try {
 			queue.add(message);
@@ -46,7 +47,7 @@ public class DefaultMailbox<RequestType> implements Mailbox<RequestType> {
 		}
 	}
 
-	public boolean cancel(RequestType message) {
+	public boolean cancel(RequestType message, ActorID actorID) {
 		return false;
 	}
 

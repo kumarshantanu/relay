@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.Mailbox;
 
 public class BatchBuffer<T> implements Mailbox<T> {
@@ -31,7 +32,7 @@ public class BatchBuffer<T> implements Mailbox<T> {
 
 	// ----- Mailbox methods -----
 
-	public void add(T element) {
+	public void add(T element, ActorID actorID) {
 		buffer.add(element);
 	}
 
@@ -46,7 +47,7 @@ public class BatchBuffer<T> implements Mailbox<T> {
 		return null;
 	}
 
-	public boolean cancel(T message) {
+	public boolean cancel(T message, ActorID actorID) {
 		return false;
 	}
 

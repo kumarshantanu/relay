@@ -1,5 +1,7 @@
 package kumarshantanu.relay.impl;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -7,6 +9,7 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 
+import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.Mailbox;
 import kumarshantanu.relay.MailboxException;
 
@@ -17,6 +20,11 @@ import kumarshantanu.relay.MailboxException;
  * @param <RequestType>
  */
 public class JMSMailbox<RequestType> implements Mailbox<RequestType> {
+
+	public static final AtomicLong INSTANCE_COUNTER = new AtomicLong(0L);
+
+	public final long instanceIndex = INSTANCE_COUNTER.incrementAndGet();
+	public final AtomicCounter MESSAGE_COUNTER = new AtomicCounter();
 
 	public final MessageProducer producer;
 	public final MessageConsumer consumer;
@@ -43,15 +51,19 @@ public class JMSMailbox<RequestType> implements Mailbox<RequestType> {
 
 	// ----- Mailbox methods -----
 
-	public void add(RequestType message) throws MailboxException {
+	public void add(RequestType message, ActorID actorID) throws MailboxException {
 		try {
-			producer.send(serde.serialize(message));
+			Message msg = serde.serialize(message);
+			msg.setJMSReplyTo(replyTo);
+			msg.setJMSCorrelationID(actorID.toString() + '_' + instanceIndex +
+					'_' + MESSAGE_COUNTER.incrementAndGet());
+			producer.send(msg);
 		} catch (JMSException e) {
 			throw new MailboxException(this, e);
 		}
 	}
 
-	public boolean cancel(RequestType message) {
+	public boolean cancel(RequestType message, ActorID actorID) {
 		throw new MailboxException(this, "cancel is not supported on JmsMailbox");
 	}
 

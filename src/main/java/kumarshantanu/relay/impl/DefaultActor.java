@@ -95,7 +95,7 @@ extends AbstractActor<RequestType, ReturnType> {
 
 	public Future<ReturnType> send(RequestType message, boolean returnFuture) throws MailboxException {
 		if (returnFuture == false) {
-			mailbox.add(message);
+			mailbox.add(message, currentActorID);
 			return null;
 		}
 		// create adapter
@@ -108,11 +108,11 @@ extends AbstractActor<RequestType, ReturnType> {
 		// create wrapper
 		CallbackFuture<RequestType, ReturnType, RequestType> wrapper =
 				new CallbackFuture<RequestType, ReturnType, RequestType>(
-						callback, mailbox, message, adapter);
+						currentActorID, callback, mailbox, message, adapter);
 		// get the result message
 		RequestType mailboxMessage = wrapper.message;
 		// send message
-		mailbox.add(mailboxMessage);
+		mailbox.add(mailboxMessage, currentActorID);
 		// return the Future object
 		return wrapper;
 	};

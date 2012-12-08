@@ -28,7 +28,7 @@ public interface Mailbox<RequestType> {
 	 * @throws MailboxException
 	 * @see poll
 	 */
-	public void add(RequestType message) throws MailboxException;
+	public void add(RequestType message, ActorID actorID) throws MailboxException;
 
 	/**
 	 * Cancel a message and return true if message was cancelled, false
@@ -37,6 +37,6 @@ public interface Mailbox<RequestType> {
 	 * @param message
 	 * @return
 	 */
-	public boolean cancel(RequestType message);
+	public boolean cancel(RequestType message, ActorID actorID) throws MailboxException;
 
 }
