@@ -24,11 +24,13 @@ public interface Mailbox<RequestType> {
 
 	/**
 	 * Add message to the mailbox.
-	 * @param message
+	 * @param message message to be added to mailbox
+	 * @param actorID ActorID instance the message is associated with
+	 * @param twoWay whether the message is meant for 2-way communication
 	 * @throws MailboxException
 	 * @see poll
 	 */
-	public void add(RequestType message, ActorID actorID) throws MailboxException;
+	public void add(RequestType message, ActorID actorID, boolean twoWay) throws MailboxException;
 
 	/**
 	 * Cancel a message and return true if message was cancelled, false

@@ -115,7 +115,7 @@ extends AbstractActor<RequestType, ReturnType> {
 			final Callback<ReturnType> handler, boolean returnFuture) throws MailboxException {
 		// short-circuit, if returnFuture is false
 		if (!returnFuture) {
-			mailbox.add(adapter.convert(message, handler), currentActorID);
+			mailbox.add(adapter.convert(message, handler), currentActorID, returnFuture);
 			return null;
 		}
 		// create wrapper (this increases memory footprint of the message)
@@ -131,7 +131,7 @@ extends AbstractActor<RequestType, ReturnType> {
 		// get the result message
 		MsgCallback<RequestType, ReturnType> mailboxMessage = handler.message;
 		// send message
-		mailbox.add(mailboxMessage, currentActorID);
+		mailbox.add(mailboxMessage, currentActorID, true);
 		// return the Future object
 		return handler;
 	}

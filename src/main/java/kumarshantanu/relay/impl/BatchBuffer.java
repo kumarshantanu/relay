@@ -32,7 +32,7 @@ public class BatchBuffer<T> implements Mailbox<T> {
 
 	// ----- Mailbox methods -----
 
-	public void add(T element, ActorID actorID) {
+	public void add(T element, ActorID actorID, boolean twoWay) {
 		buffer.add(element);
 	}
 

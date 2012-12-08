@@ -29,7 +29,7 @@ public class DefaultMailbox<RequestType> implements Mailbox<RequestType> {
 		}
 	}
 	
-	public void add(RequestType message, ActorID actorID) {
+	public void add(RequestType message, ActorID actorID, boolean twoWay) {
 		sem.acquireUninterruptibly();
 		try {
 			queue.add(message);

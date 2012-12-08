@@ -51,12 +51,14 @@ public class JMSMailbox<RequestType> implements Mailbox<RequestType> {
 
 	// ----- Mailbox methods -----
 
-	public void add(RequestType message, ActorID actorID) throws MailboxException {
+	public void add(RequestType message, ActorID actorID, boolean twoWay) throws MailboxException {
 		try {
 			Message msg = serde.serialize(message);
-			msg.setJMSReplyTo(replyTo);
-			msg.setJMSCorrelationID(actorID.toString() + '_' + instanceIndex +
-					'_' + MESSAGE_COUNTER.incrementAndGet());
+			if (twoWay) {
+				msg.setJMSReplyTo(replyTo);
+				msg.setJMSCorrelationID(actorID.toString() + '_' + instanceIndex +
+						'_' + MESSAGE_COUNTER.incrementAndGet());
+			}
 			producer.send(msg);
 		} catch (JMSException e) {
 			throw new MailboxException(this, e);

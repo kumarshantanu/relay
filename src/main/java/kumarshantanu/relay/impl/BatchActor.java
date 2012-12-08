@@ -85,7 +85,7 @@ public final class BatchActor<RequestType> extends
 	public Future<RequestType> send(RequestType message, boolean returnFuture)
 			throws MailboxException {
 		if (returnFuture == false) {
-			batchBuffer.add(message, currentActorID);
+			batchBuffer.add(message, currentActorID, returnFuture);
 			return null;
 		}
 		throw new UnsupportedOperationException(

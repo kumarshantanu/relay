@@ -59,7 +59,7 @@ public class Util {
 			public boolean isEmpty() {
 				return queue.isEmpty();
 			}
-			public void add(T message, ActorID actorID) throws MailboxException {
+			public void add(T message, ActorID actorID, boolean twoWay) throws MailboxException {
 				try {
 					queue.add(message);
 				} catch (RuntimeException e) {
