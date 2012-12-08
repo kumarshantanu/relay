@@ -58,7 +58,7 @@ public class LifecycleAwareAgent extends AbstractLifecycleAware implements Agent
 				// usual business
 				Actor<?, ?> a = agentCommon.findActor(name);
 				if (a != null) {
-					Runnable r = a.poll(a.getActorId());
+					Runnable r = a.poll(a.getActorID());
 					if (r != null) {
 						toSleep = false;
 						threadPool.execute(r);

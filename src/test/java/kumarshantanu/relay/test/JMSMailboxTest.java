@@ -36,8 +36,7 @@ public class JMSMailboxTest {
 				return ((TextMessage) format).getText();
 			}
 		};
-		JMSMailbox<String> mailbox = new JMSMailbox<String>(amq.getProducer(),
-				amq.getConsumer(), serde);
+		JMSMailbox<String> mailbox = JMSMailbox.create(amq.session, amq.queueName, serde);
 		final Actor<String, ?> ac = new DefaultActor<String, Object>(ag, null, mailbox, null, null) {
 			@Override
 			public Object execute(String req) {

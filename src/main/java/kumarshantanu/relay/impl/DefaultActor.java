@@ -2,7 +2,7 @@ package kumarshantanu.relay.impl;
 
 import java.util.concurrent.Future;
 
-import kumarshantanu.relay.ActorId;
+import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.Agent;
 import kumarshantanu.relay.Callback;
 import kumarshantanu.relay.Mailbox;
@@ -26,7 +26,7 @@ extends AbstractActor<RequestType, ReturnType> {
 
 	public DefaultActor(Agent agent, Callback<ReturnType> callback,
 			Mailbox<RequestType> mailbox,
-			String actorName, ActorId parentActor) {
+			String actorName, ActorID parentActor) {
 		super(parentActor, actorName);
 		Util.notNull(agent, "agent");
 		this.callback = callback;
@@ -46,13 +46,13 @@ extends AbstractActor<RequestType, ReturnType> {
 
 	private class Job implements Runnable {
 		public final RequestType message;
-		public final ActorId actorId;
-		public Job(RequestType message, ActorId actorId) {
+		public final ActorID actorID;
+		public Job(RequestType message, ActorID actorID) {
 			this.message = message;
-			this.actorId = actorId;
+			this.actorID = actorID;
 		}
 		public void run() {
-			CURRENT_ACTOR_ID.set(actorId);
+			CURRENT_ACTOR_ID.set(actorID);
 			try {
 				tvcKeeper.incrementBy(1);
 				ReturnType val = execute(message);
@@ -81,12 +81,12 @@ extends AbstractActor<RequestType, ReturnType> {
 		return mailbox.isEmpty();
 	}
 
-	public Runnable poll(ActorId actorId) {
+	public Runnable poll(ActorID actorID) {
 		final RequestType message = mailbox.poll();
 		if (message == null) {
 			return null;
 		}
-		return new Job(message, actorId);
+		return new Job(message, actorID);
 	}
 
 	public void send(RequestType message) throws MailboxException {

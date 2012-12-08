@@ -2,7 +2,7 @@ package kumarshantanu.relay.impl;
 
 import java.util.concurrent.Future;
 
-import kumarshantanu.relay.ActorId;
+import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.Agent;
 import kumarshantanu.relay.Callback;
 import kumarshantanu.relay.MailboxException;
@@ -21,7 +21,7 @@ public abstract class PollingActor<ReturnType> extends AbstractActor<Object, Ret
 	public final Callback<ReturnType> callback;
 
 	public PollingActor(Agent agent, Callback<ReturnType> callback,
-			String actorName, ActorId parentActor) {
+			String actorName, ActorID parentActor) {
 		super(parentActor, actorName);
 		Util.notNull(agent, "agent");
 		this.callback = callback;
@@ -41,12 +41,12 @@ public abstract class PollingActor<ReturnType> extends AbstractActor<Object, Ret
 	// ----- internal stuff -----
 
 	private class Job implements Runnable {
-		public final ActorId actorId;
-		public Job(ActorId actorId) {
-			this.actorId = actorId;
+		public final ActorID actorID;
+		public Job(ActorID actorID) {
+			this.actorID = actorID;
 		}
 		public void run() {
-			CURRENT_ACTOR_ID.set(actorId);
+			CURRENT_ACTOR_ID.set(actorID);
 			try {
 				tvcKeeper.incrementBy(1);
 				ReturnType val = execute(null);
@@ -75,9 +75,9 @@ public abstract class PollingActor<ReturnType> extends AbstractActor<Object, Ret
 		return true;
 	}
 
-	public Runnable poll(ActorId actorId) {
+	public Runnable poll(ActorID actorID) {
 		if (poll()) {
-			return new Job(actorId);
+			return new Job(actorID);
 		}
 		return null;
 	}

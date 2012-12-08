@@ -1,17 +1,17 @@
 package kumarshantanu.relay.monitoring;
 
 import kumarshantanu.relay.Actor;
-import kumarshantanu.relay.ActorId;
+import kumarshantanu.relay.ActorID;
 
 public class ActorInfo {
 
-	public final ActorId actorId;
+	public final ActorID actorID;
 	public final long[] throughput;
 	public final long durMillis;
 	public final String durName;
 
 	public ActorInfo(Actor<?, ?> actor) {
-		actorId = actor.getActorId();
+		actorID = actor.getActorID();
 		if (actor instanceof ThroughputAware) {
 			ThroughputAware t = (ThroughputAware) actor;
 			throughput = t.getThroughput();

@@ -58,12 +58,12 @@ public class AgentCommon implements Agent {
 	
 	public void register(Actor<?, ?> actor) {
 		Util.notNull(actor, "actor");
-		ACTORS.put(actor.getActorId().getActorName(), actor);
+		ACTORS.put(actor.getActorID().getActorName(), actor);
 	}
 	
 	public void unregister(Actor<?, ?> actor) {
 		Util.notNull(actor, "actor");
-		ACTORS.remove(actor.getActorId().getActorName());
+		ACTORS.remove(actor.getActorID().getActorName());
 	}
 	
 	public Actor<?, ?> findActor(String name) {

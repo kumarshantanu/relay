@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import kumarshantanu.relay.Actor;
-import kumarshantanu.relay.ActorId;
+import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.monitoring.ThroughputAware;
 import kumarshantanu.relay.monitoring.TimeVersusCountKeeper;
 
@@ -25,15 +25,15 @@ implements Actor<RequestType, ReturnType>, ThroughputAware {
 
 	public final TimeVersusCountKeeper tvcKeeper = new TimeVersusCountKeeper();
 
-	public final ActorId currentActorId;
-	public final ActorId parentActorId;
+	public final ActorID currentActorID;
+	public final ActorID parentActorID;
 
-	public AbstractActor(ActorId parentActorId, String actorName) {
-		this.parentActorId = parentActorId;
+	public AbstractActor(ActorID parentActorId, String actorName) {
+		this.parentActorID = parentActorId;
 		if (actorName == null) {
-			this.currentActorId = new ActorId(getDefaultName());
+			this.currentActorID = new ActorID(getDefaultName());
 		} else {
-			this.currentActorId = new ActorId(actorName);
+			this.currentActorID = new ActorID(actorName);
 		}
 	}
 
@@ -41,8 +41,8 @@ implements Actor<RequestType, ReturnType>, ThroughputAware {
 		return "Actor_" + nextCounter();
 	}
 
-	public ActorId getActorId() {
-		return currentActorId;
+	public ActorID getActorID() {
+		return currentActorID;
 	}
 
 	// ----- Worker methods (dummy implementation) -----

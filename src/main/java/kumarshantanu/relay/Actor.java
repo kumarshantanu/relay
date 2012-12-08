@@ -13,8 +13,8 @@ import java.util.concurrent.Future;
  */
 public interface Actor<RequestType, ReturnType> extends Worker<RequestType, ReturnType> {
 
-	public static final ThreadLocal<ActorId> CURRENT_ACTOR_ID =
-			new ThreadLocal<ActorId>();
+	public static final ThreadLocal<ActorID> CURRENT_ACTOR_ID =
+			new ThreadLocal<ActorID>();
 
 	public abstract boolean isMailboxEmpty();
 
@@ -25,13 +25,13 @@ public interface Actor<RequestType, ReturnType> extends Worker<RequestType, Retu
 	 * @param actorId
 	 * @return instance of Runnable that can be executed by agent thread-pool
 	 */
-	public abstract Runnable poll(ActorId actorId);
+	public abstract Runnable poll(ActorID actorID);
 
 	/**
 	 * Get ActorId instance of the actor.
 	 * @return
 	 */
-	public abstract ActorId getActorId();
+	public abstract ActorID getActorID();
 
 	/**
 	 * Send a message to the mailbox of the actor. The message is queued until

@@ -3,12 +3,10 @@ package kumarshantanu.relay.impl;
 import java.util.List;
 import java.util.concurrent.Future;
 
-import kumarshantanu.relay.ActorId;
+import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.Agent;
 import kumarshantanu.relay.Callback;
 import kumarshantanu.relay.MailboxException;
-import kumarshantanu.relay.impl.AbstractActor;
-import kumarshantanu.relay.impl.Util;
 
 public final class BatchActor<RequestType> extends
 		AbstractActor<RequestType, RequestType> {
@@ -42,13 +40,13 @@ public final class BatchActor<RequestType> extends
 
 	private class Job implements Runnable {
 		public final List<RequestType> messages;
-		public final ActorId actorId;
-		public Job(List<RequestType> messages, ActorId actorId) {
+		public final ActorID actorID;
+		public Job(List<RequestType> messages, ActorID actorID) {
 			this.messages = messages;
-			this.actorId = actorId;
+			this.actorID = actorID;
 		}
 		public void run() {
-			CURRENT_ACTOR_ID.set(actorId);
+			CURRENT_ACTOR_ID.set(actorID);
 			try {
 				tvcKeeper.incrementBy(messages.size());
 				callback.onReturn(messages);
@@ -68,7 +66,7 @@ public final class BatchActor<RequestType> extends
 		return batchBuffer.isEmpty();
 	}
 
-	public Runnable poll(ActorId actorId) {
+	public Runnable poll(ActorID actorID) {
 		if (batchBuffer.size() < maxBatchSize &&
 				batchBuffer.flushedAt + flushMillis > System.currentTimeMillis()) {
 			return null;
@@ -77,7 +75,7 @@ public final class BatchActor<RequestType> extends
 		if (messages.isEmpty()) {
 			return null;
 		}
-		return new Job(messages, actorId);
+		return new Job(messages, actorID);
 	}
 
 	public void send(RequestType message) throws MailboxException {

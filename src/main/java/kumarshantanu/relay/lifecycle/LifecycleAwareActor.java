@@ -3,7 +3,7 @@ package kumarshantanu.relay.lifecycle;
 import java.util.concurrent.Future;
 
 import kumarshantanu.relay.Actor;
-import kumarshantanu.relay.ActorId;
+import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.Callback;
 import kumarshantanu.relay.MailboxException;
 import kumarshantanu.relay.lifecycle.LifecycleState.LifecycleStateEnum;
@@ -14,7 +14,7 @@ extends AbstractLifecycleAware implements Actor<RequestType, ReturnType> {
 	public final Actor<RequestType, ReturnType> orig;
 	
 	public LifecycleAwareActor(Actor<RequestType, ReturnType> orig) {
-		super(orig.getActorId().getActorName());
+		super(orig.getActorID().getActorName());
 		this.orig = orig;
 		this.setState(LifecycleStateEnum.RUNNING);
 	}
@@ -38,17 +38,17 @@ extends AbstractLifecycleAware implements Actor<RequestType, ReturnType> {
 
 	// ----- Actor methods -----
 	
-	public ActorId getActorId() {
-		return orig.getActorId();
+	public ActorID getActorID() {
+		return orig.getActorID();
 	}
 	
 	public boolean isMailboxEmpty() {
 		return orig.isMailboxEmpty();
 	}
 	
-	public Runnable poll(ActorId actorId) {
+	public Runnable poll(ActorID actorID) {
 		if (getState() == LifecycleStateEnum.RUNNING) {
-			return orig.poll(actorId);
+			return orig.poll(actorID);
 		}
 		return null;
 	}

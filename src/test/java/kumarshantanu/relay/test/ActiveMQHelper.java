@@ -23,6 +23,7 @@ public class ActiveMQHelper {
 	public final BrokerService broker;
 	public final Connection connection;
 	public final Session session;
+	public final String queueName;
 	public final Destination destination;
 
 	public ActiveMQHelper(String brokerURL, String queueName) throws Exception {
@@ -39,6 +40,8 @@ public class ActiveMQHelper {
 
         // Create a Session
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+
+        this.queueName = queueName;
 
         // Create the destination (Topic or Queue)
         destination = session.createQueue(queueName);

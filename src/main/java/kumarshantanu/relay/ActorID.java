@@ -7,15 +7,15 @@ import kumarshantanu.relay.impl.Util;
  * @author Shantanu Kumar (kumar.shantanu@gmail.com)
  *
  */
-public class ActorId {
+public class ActorID {
 	
 	public final String actorName;
 	
-	public ActorId(String name) {
+	public ActorID(String name) {
 		this.actorName = name;
 	}
 
-	public String getJvmId() {
+	public String getJvmID() {
 		return Util.JVM_ID;
 	}
 	
@@ -25,7 +25,7 @@ public class ActorId {
 	
 	@Override
 	public String toString() {
-		return "" + getJvmId() + "/" + getActorName();
+		return "" + getJvmID() + "/" + getActorName();
 	}
 	
 	@Override
@@ -35,7 +35,7 @@ public class ActorId {
 	
 	@Override
 	public boolean equals(Object obj) {
-		return obj instanceof ActorId &&
+		return obj instanceof ActorID &&
 				toString().equals(obj.toString());
 	}
 

@@ -1,9 +1,11 @@
 package kumarshantanu.relay.impl;
 
+import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
+import javax.jms.Session;
 
 import kumarshantanu.relay.Mailbox;
 import kumarshantanu.relay.MailboxException;
@@ -19,12 +21,24 @@ public class JMSMailbox<RequestType> implements Mailbox<RequestType> {
 	public final MessageProducer producer;
 	public final MessageConsumer consumer;
 	public final JMSMessageSerializer<RequestType> serde;
+	public final Destination replyTo;
 
 	public JMSMailbox(MessageProducer producer, MessageConsumer consumer,
-			JMSMessageSerializer<RequestType> serde) {
+			JMSMessageSerializer<RequestType> serde, Destination replyTo) {
 		this.producer = producer;
 		this.consumer = consumer;
 		this.serde = serde;
+		this.replyTo = replyTo;
+	}
+
+	// factory method
+	public static <T> JMSMailbox<T> create(Session session, String queueName,
+			JMSMessageSerializer<T> serde) throws JMSException {
+		Destination destination = session.createQueue(queueName);
+		MessageProducer producer = session.createProducer(destination);
+		MessageConsumer consumer = session.createConsumer(destination);
+		Destination replyTo = session.createTemporaryQueue();
+		return new JMSMailbox<T>(producer, consumer, serde, replyTo);
 	}
 
 	// ----- Mailbox methods -----

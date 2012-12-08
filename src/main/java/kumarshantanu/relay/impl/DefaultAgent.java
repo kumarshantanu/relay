@@ -52,7 +52,7 @@ public class DefaultAgent implements Agent {
 			for (String name: agentCommon.ACTORS.keySet()) {
 				Actor<?, ?> a = agentCommon.findActor(name);
 				if (a != null) {
-					Runnable r = a.poll(a.getActorId());
+					Runnable r = a.poll(a.getActorID());
 					if (r != null) {
 						toSleep = false;
 						steppingIdleMillis = 1;
