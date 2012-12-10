@@ -115,17 +115,6 @@ extends AbstractActor<RequestType, ReturnType> {
 		mailbox.add(mailboxMessage, currentActorID, returnFuture);
 		// return the Future object
 		return wrapper;
-	};
-
-	public void send(RequestType message,
-			Callback<ReturnType> handler) throws MailboxException {
-		throw new UnsupportedOperationException(
-				"'send' with callback is not supported on this actor");
 	}
 
-	public Future<ReturnType> send(RequestType message,
-			Callback<ReturnType> handler, boolean returnFuture) throws MailboxException {
-		throw new UnsupportedOperationException(
-				"'send' with callback is not supported on this actor");
-	}
 }

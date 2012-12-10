@@ -91,15 +91,4 @@ public abstract class PollingActor<ReturnType> extends AbstractActor<Object, Ret
 		throw new IllegalStateException("send is not supported on this actor");
 	}
 
-	public void send(Object message, Callback<ReturnType> handler)
-			throws MailboxException {
-		throw new IllegalStateException("send is not supported on this actor");
-	}
-
-	public Future<ReturnType> send(Object message,
-			Callback<ReturnType> handler, boolean returnFuture)
-			throws MailboxException {
-		throw new IllegalStateException("send is not supported on this actor");
-	}
-
 }

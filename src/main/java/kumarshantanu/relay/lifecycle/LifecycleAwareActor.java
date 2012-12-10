@@ -4,7 +4,6 @@ import java.util.concurrent.Future;
 
 import kumarshantanu.relay.Actor;
 import kumarshantanu.relay.ActorID;
-import kumarshantanu.relay.Callback;
 import kumarshantanu.relay.MailboxException;
 import kumarshantanu.relay.lifecycle.LifecycleState.LifecycleStateEnum;
 
@@ -60,17 +59,6 @@ extends AbstractLifecycleAware implements Actor<RequestType, ReturnType> {
 	public Future<ReturnType> send(RequestType message, boolean returnFuture)
 			throws MailboxException {
 		return orig.send(message, returnFuture);
-	}
-
-	public void send(RequestType message, Callback<ReturnType> handler)
-			throws MailboxException {
-		orig.send(message, handler);
-	}
-
-	public Future<ReturnType> send(RequestType message,
-			Callback<ReturnType> handler, boolean returnFuture)
-			throws MailboxException {
-		return orig.send(message, handler, returnFuture);
 	}
 
 }

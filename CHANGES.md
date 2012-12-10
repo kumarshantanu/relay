@@ -17,6 +17,6 @@
   * BatchActor
   * PollingActor
   * DefaultMailbox
-  * JMSMailbox (tested with JMS API using embedded ActiveMQ broker)
-* [TODO] Distinguish local and potentially-remote actors, possibly drop Callback
+  * JMSMailbox (tested with JMS API using embedded ActiveMQ broker) [TODO] 2-way messaging with Future<T>
+* [TODO] Drop Callback, CallbackFuture - can be replaced by ephemeral actors
 * Documentation

@@ -7,7 +7,6 @@ import kumarshantanu.relay.Actor;
 import kumarshantanu.relay.Agent;
 import kumarshantanu.relay.Callback;
 import kumarshantanu.relay.MailboxException;
-import kumarshantanu.relay.impl.AmbientActor;
 import kumarshantanu.relay.impl.DefaultActor;
 import kumarshantanu.relay.impl.DefaultAgent;
 import kumarshantanu.relay.impl.Util;
@@ -20,21 +19,6 @@ public class SimpleTest {
 	
 	private interface ActorFactory {
 		public Actor<String, String> create(Agent ag, Callback<String> callback);
-	}
-	
-	@Test
-	public void ambientActorTest() {
-		test(new ActorFactory() {
-			public Actor<String, String> create(Agent ag,
-					Callback<String> callback) {
-				return new AmbientActor<String, String>(ag, callback, null, null, null) {
-					@Override
-					public String execute(String req) {
-						return req;
-					}
-				};
-			}
-		});
 	}
 	
 	@Test

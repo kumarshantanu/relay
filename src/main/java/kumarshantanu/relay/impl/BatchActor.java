@@ -92,16 +92,4 @@ public final class BatchActor<RequestType> extends
 				"'send' with returnFuture=true is not supported on this actor");
 	}
 
-	public void send(RequestType message, Callback<RequestType> handler)
-			throws MailboxException {
-		throw new UnsupportedOperationException(
-				"'send' with callback is not supported on this actor");
-	}
-
-	public Future<RequestType> send(RequestType message,
-			Callback<RequestType> handler, boolean returnFuture)
-			throws MailboxException {
-		throw new UnsupportedOperationException(
-				"'send' with callback is not supported on this actor");
-	}
 }
