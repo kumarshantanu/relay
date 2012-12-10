@@ -6,7 +6,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import kumarshantanu.relay.ActorID;
-import kumarshantanu.relay.Callback;
 import kumarshantanu.relay.CorrelatedMessage;
 import kumarshantanu.relay.Mailbox;
 import kumarshantanu.relay.MailboxException;
@@ -73,13 +72,6 @@ public class Util {
 			public boolean cancel(RequestType message, ActorID actorID) {
 				return false;
 			}
-		};
-	}
-
-	public static <T> Callback<T> ignoreResult(Class<T> clazz) {
-		return new Callback<T>() {
-			public void onReturn(T value) { /* ignore */ };
-			public void onException(Exception ex) { /* ignore */ }
 		};
 	}
 
