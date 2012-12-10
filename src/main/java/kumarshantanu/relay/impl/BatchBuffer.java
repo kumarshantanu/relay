@@ -5,20 +5,23 @@ import java.util.LinkedList;
 import java.util.List;
 
 import kumarshantanu.relay.ActorID;
+import kumarshantanu.relay.CorrelatedMessage;
 import kumarshantanu.relay.Mailbox;
 
-public class BatchBuffer<T> implements Mailbox<T> {
+public class BatchBuffer<RequestType> implements Mailbox<RequestType> {
 
-	private final List<T> buffer = new LinkedList<T>();
+	private final List<CorrelatedMessage<RequestType>> buffer =
+			new LinkedList<CorrelatedMessage<RequestType>>();
+
 	public volatile long flushedAt = System.currentTimeMillis();
 
-	public synchronized List<T> remove() {
+	public synchronized List<CorrelatedMessage<RequestType>> remove() {
 		return remove(Integer.MAX_VALUE);
 	}
 
-	public synchronized List<T> remove(int max) {
+	public synchronized List<CorrelatedMessage<RequestType>> remove(int max) {
 		int size = Math.min(size(), max);
-		List<T> result = new ArrayList<T>();
+		List<CorrelatedMessage<RequestType>> result = new ArrayList<CorrelatedMessage<RequestType>>();
 		for (int i = 0; i < size; i++) {
 			result.add(buffer.remove(0));
 		}
@@ -32,22 +35,22 @@ public class BatchBuffer<T> implements Mailbox<T> {
 
 	// ----- Mailbox methods -----
 
-	public void add(T element, ActorID actorID, boolean twoWay) {
-		buffer.add(element);
+	public void add(RequestType element, ActorID actorID, String correlationID) {
+		buffer.add(new CorrelatedMessage<RequestType>(element, correlationID));
 	}
 
 	public boolean isEmpty() {
 		return buffer.isEmpty();
 	}
 
-	public synchronized T poll() {
+	public synchronized CorrelatedMessage<RequestType> poll() {
 		if (!buffer.isEmpty()) {
 			return buffer.remove(0);
 		}
 		return null;
 	}
 
-	public boolean cancel(T message, ActorID actorID) {
+	public boolean cancel(RequestType message, ActorID actorID) {
 		return false;
 	}
 

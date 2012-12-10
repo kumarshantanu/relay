@@ -1,11 +1,13 @@
 package kumarshantanu.relay.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
 import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.Agent;
 import kumarshantanu.relay.Callback;
+import kumarshantanu.relay.CorrelatedMessage;
 import kumarshantanu.relay.MailboxException;
 
 public final class BatchActor<RequestType> extends
@@ -71,11 +73,15 @@ public final class BatchActor<RequestType> extends
 				batchBuffer.flushedAt + flushMillis > System.currentTimeMillis()) {
 			return null;
 		}
-		List<RequestType> messages = batchBuffer.remove(maxBatchSize);
+		List<CorrelatedMessage<RequestType>> messages = batchBuffer.remove(maxBatchSize);
 		if (messages.isEmpty()) {
 			return null;
 		}
-		return new Job(messages, actorID);
+		List<RequestType> onlyMessages = new ArrayList<RequestType>(messages.size());
+		for (CorrelatedMessage<RequestType> each: messages) {
+			onlyMessages.add(each.message);
+		}
+		return new Job(onlyMessages, actorID);
 	}
 
 	public void send(RequestType message) throws MailboxException {
@@ -85,7 +91,7 @@ public final class BatchActor<RequestType> extends
 	public Future<RequestType> send(RequestType message, boolean returnFuture)
 			throws MailboxException {
 		if (returnFuture == false) {
-			batchBuffer.add(message, currentActorID, returnFuture);
+			batchBuffer.add(message, currentActorID, null);
 			return null;
 		}
 		throw new UnsupportedOperationException(

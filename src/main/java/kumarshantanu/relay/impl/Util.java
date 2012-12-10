@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 
 import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.Callback;
+import kumarshantanu.relay.CorrelatedMessage;
 import kumarshantanu.relay.Mailbox;
 import kumarshantanu.relay.MailboxException;
 
@@ -53,25 +54,25 @@ public class Util {
 		}
 	}
 
-	public static <T> Mailbox<T> createMailbox(final Queue<T> queue) {
+	public static <RequestType, ReturnType> Mailbox<RequestType> createMailbox(final Queue<CorrelatedMessage<RequestType>> queue) {
 		notNull(queue, "queue");
-		return new Mailbox<T>() {
+		return new Mailbox<RequestType>() {
 			public boolean isEmpty() {
 				return queue.isEmpty();
 			}
-			public void add(T message, ActorID actorID, boolean twoWay) throws MailboxException {
+			public void add(RequestType message, ActorID actorID, String correlationID) throws MailboxException {
 				try {
-					queue.add(message);
+					queue.add(new CorrelatedMessage<RequestType>(message, correlationID));
 				} catch (RuntimeException e) {
 					throw new MailboxException(this, e);
 				}
 			}
-			public T poll() {
+			public CorrelatedMessage<RequestType> poll() {
 				return queue.poll();
 			}
-			public boolean cancel(T message, ActorID actorID) {
+			public boolean cancel(RequestType message, ActorID actorID) {
 				return false;
-			};
+			}
 		};
 	}
 

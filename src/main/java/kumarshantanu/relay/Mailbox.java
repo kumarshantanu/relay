@@ -1,5 +1,6 @@
 package kumarshantanu.relay;
 
+
 /**
  * Mailbox to hold messages
  * @author Shantanu Kumar (kumar.shantanu@gmail.com)
@@ -20,17 +21,17 @@ public interface Mailbox<RequestType> {
 	 * inserted subject to the data structure type used to hold messages.
 	 * @return
 	 */
-	public RequestType poll();
+	public CorrelatedMessage<RequestType> poll();
 
 	/**
 	 * Add message to the mailbox.
 	 * @param message message to be added to mailbox
 	 * @param actorID ActorID instance the message is associated with
-	 * @param twoWay whether the message is meant for 2-way communication
+	 * @param correlationID the message correlation ID (for 2-way communication)
 	 * @throws MailboxException
 	 * @see poll
 	 */
-	public void add(RequestType message, ActorID actorID, boolean twoWay) throws MailboxException;
+	public void add(RequestType message, ActorID actorID, String correlationID) throws MailboxException;
 
 	/**
 	 * Cancel a message and return true if message was cancelled, false

@@ -1,7 +1,5 @@
 package kumarshantanu.relay.impl;
 
-import java.util.concurrent.atomic.AtomicLong;
-
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -10,7 +8,7 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 
 import kumarshantanu.relay.ActorID;
-import kumarshantanu.relay.Mailbox;
+import kumarshantanu.relay.CorrelatedMessage;
 import kumarshantanu.relay.MailboxException;
 
 /**
@@ -19,12 +17,7 @@ import kumarshantanu.relay.MailboxException;
  *
  * @param <RequestType>
  */
-public class JMSMailbox<RequestType> implements Mailbox<RequestType> {
-
-	public static final AtomicLong INSTANCE_COUNTER = new AtomicLong(0L);
-
-	public final long instanceIndex = INSTANCE_COUNTER.incrementAndGet();
-	public final AtomicCounter MESSAGE_COUNTER = new AtomicCounter();
+public class JMSMailbox<RequestType> extends AbstractMailbox<RequestType> {
 
 	public final MessageProducer producer;
 	public final MessageConsumer consumer;
@@ -40,24 +33,23 @@ public class JMSMailbox<RequestType> implements Mailbox<RequestType> {
 	}
 
 	// factory method
-	public static <T> JMSMailbox<T> create(Session session, String queueName,
-			JMSMessageSerializer<T> serde) throws JMSException {
+	public static <Request> JMSMailbox<Request> create(Session session, String queueName,
+			JMSMessageSerializer<Request> serde) throws JMSException {
 		Destination destination = session.createQueue(queueName);
 		MessageProducer producer = session.createProducer(destination);
 		MessageConsumer consumer = session.createConsumer(destination);
 		Destination replyTo = session.createTemporaryQueue();
-		return new JMSMailbox<T>(producer, consumer, serde, replyTo);
+		return new JMSMailbox<Request>(producer, consumer, serde, replyTo);
 	}
 
 	// ----- Mailbox methods -----
 
-	public void add(RequestType message, ActorID actorID, boolean twoWay) throws MailboxException {
+	public void add(RequestType message, ActorID actorID, String correlationID) throws MailboxException {
 		try {
 			Message msg = serde.serialize(message);
-			if (twoWay) {
+			if (correlationID != null) {
 				msg.setJMSReplyTo(replyTo);
-				msg.setJMSCorrelationID(actorID.toString() + '_' + instanceIndex +
-						'_' + MESSAGE_COUNTER.incrementAndGet());
+				msg.setJMSCorrelationID(correlationID);
 			}
 			producer.send(msg);
 		} catch (JMSException e) {
@@ -76,7 +68,7 @@ public class JMSMailbox<RequestType> implements Mailbox<RequestType> {
 		return false;
 	}
 
-	public RequestType poll() throws MailboxException {
+	public CorrelatedMessage<RequestType> poll() throws MailboxException {
 		Message message = null;
 		try {
 			message = consumer.receiveNoWait();
@@ -85,7 +77,8 @@ public class JMSMailbox<RequestType> implements Mailbox<RequestType> {
 		}
 		if (message != null) {
 			try {
-				return serde.deserialize(message);
+				return new CorrelatedMessage<RequestType>(
+						serde.deserialize(message), message.getJMSCorrelationID());
 			} catch (JMSException e) {
 				throw new MailboxException(this, e);
 			}

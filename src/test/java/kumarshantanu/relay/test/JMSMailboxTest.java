@@ -37,7 +37,7 @@ public class JMSMailboxTest {
 			}
 		};
 		JMSMailbox<String> mailbox = JMSMailbox.create(amq.session, amq.queueName, serde);
-		final Actor<String, ?> ac = new DefaultActor<String, Object>(ag, null, mailbox, null, null) {
+		final Actor<String, ?> ac = new DefaultActor<String, Object>(ag, mailbox, null, null) {
 			@Override
 			public Object execute(String req) {
 				counter.incrementAndGet();

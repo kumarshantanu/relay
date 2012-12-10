@@ -1,11 +1,12 @@
 package kumarshantanu.relay.impl;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
 import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.Agent;
-import kumarshantanu.relay.Callback;
-import kumarshantanu.relay.Mailbox;
+import kumarshantanu.relay.CorrelatedMessage;
 import kumarshantanu.relay.MailboxException;
 
 /**
@@ -21,15 +22,15 @@ import kumarshantanu.relay.MailboxException;
 public abstract class DefaultActor<RequestType, ReturnType>
 extends AbstractActor<RequestType, ReturnType> {
 
-	public final Mailbox<RequestType> mailbox;
-	public final Callback<ReturnType> callback;
+	public final Map<String, Future<ReturnType>> futures =
+			new ConcurrentHashMap<String, Future<ReturnType>>();
 
-	public DefaultActor(Agent agent, Callback<ReturnType> callback,
-			Mailbox<RequestType> mailbox,
+	public final AbstractMailbox<RequestType> mailbox;
+
+	public DefaultActor(Agent agent, AbstractMailbox<RequestType> mailbox,
 			String actorName, ActorID parentActor) {
 		super(parentActor, actorName);
 		Util.notNull(agent, "agent");
-		this.callback = callback;
 		if (mailbox != null) {
 			this.mailbox = mailbox;
 		} else {
@@ -39,39 +40,22 @@ extends AbstractActor<RequestType, ReturnType> {
 	}
 
 	public DefaultActor(Agent agent) {
-		this(agent, null, null, null, null);
+		this(agent, null, null, null);
 	}
 
 	// ----- internal stuff -----
 
 	private class Job implements Runnable {
-		public final RequestType message;
+		public final CorrelatedMessage<RequestType> corMessage;
 		public final ActorID actorID;
-		public Job(RequestType message, ActorID actorID) {
-			this.message = message;
+		public Job(CorrelatedMessage<RequestType> corMessage, ActorID actorID) {
+			this.corMessage = corMessage;
 			this.actorID = actorID;
 		}
 		public void run() {
 			CURRENT_ACTOR_ID.set(actorID);
-			try {
-				tvcKeeper.incrementBy(1);
-				ReturnType val = execute(message);
-				if (callback != null) {
-					try {
-						callback.onReturn(val);
-					} catch (Exception e) {
-						// ignore callback exceptions
-					}
-				}
-			} catch (Exception e) {
-				if (callback != null) {
-					try {
-						callback.onException(e);
-					} catch (Exception f) {
-						// ignore callback exceptions
-					}
-				}
-			}
+			tvcKeeper.incrementBy(1);
+			execute(corMessage.message, corMessage.correlationID);
 		}
 	}
 
@@ -82,7 +66,7 @@ extends AbstractActor<RequestType, ReturnType> {
 	}
 
 	public Runnable poll(ActorID actorID) {
-		final RequestType message = mailbox.poll();
+		final CorrelatedMessage<RequestType> message = mailbox.poll();
 		if (message == null) {
 			return null;
 		}
@@ -95,26 +79,16 @@ extends AbstractActor<RequestType, ReturnType> {
 
 	public Future<ReturnType> send(RequestType message, boolean returnFuture) throws MailboxException {
 		if (returnFuture == false) {
-			mailbox.add(message, currentActorID, returnFuture);
+			mailbox.add(message, currentActorID, null);
 			return null;
 		}
-		// create adapter
-		MsgAdapter<RequestType, ReturnType, RequestType> adapter =
-				new MsgAdapter<RequestType, ReturnType, RequestType>() {
-			public RequestType convert(RequestType request, Callback<ReturnType> callback) {
-				return request;
-			}
-		};
-		// create wrapper
-		CallbackFuture<RequestType, ReturnType, RequestType> wrapper =
-				new CallbackFuture<RequestType, ReturnType, RequestType>(
-						currentActorID, callback, mailbox, message, adapter);
-		// get the result message
-		RequestType mailboxMessage = wrapper.message;
-		// send message
-		mailbox.add(mailboxMessage, currentActorID, returnFuture);
-		// return the Future object
-		return wrapper;
+		String corID = returnFuture? mailbox.nextCorrelationID(currentActorID): null;
+		mailbox.add(message, currentActorID, corID);
+		Future<ReturnType> future = new ResponseFuture<ReturnType>();
+		if (returnFuture) {
+			futures.put(corID, future);
+		}
+		return future;
 	}
 
 }

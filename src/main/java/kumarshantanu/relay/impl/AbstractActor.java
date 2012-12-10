@@ -1,6 +1,8 @@
 package kumarshantanu.relay.impl;
 
 import java.math.BigInteger;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 import kumarshantanu.relay.Actor;
@@ -27,14 +29,26 @@ implements Actor<RequestType, ReturnType>, ThroughputAware {
 
 	public final ActorID currentActorID;
 	public final ActorID parentActorID;
+	public final Map<String, ResponseFuture<ReturnType>> futures;
 
-	public AbstractActor(ActorID parentActorId, String actorName) {
+
+	public AbstractActor(ActorID parentActorId, String actorName,
+			Map<String, ResponseFuture<ReturnType>> futures) {
 		this.parentActorID = parentActorId;
 		if (actorName == null) {
 			this.currentActorID = new ActorID(getDefaultName());
 		} else {
 			this.currentActorID = new ActorID(actorName);
 		}
+		if (futures == null) {
+			this.futures = new ConcurrentHashMap<String, ResponseFuture<ReturnType>>();
+		} else {
+			this.futures = futures;
+		}
+	}
+
+	public AbstractActor(ActorID parentActorId, String actorName) {
+		this(parentActorId, actorName, null);
 	}
 
 	protected static String getDefaultName() {
@@ -43,6 +57,30 @@ implements Actor<RequestType, ReturnType>, ThroughputAware {
 
 	public ActorID getActorID() {
 		return currentActorID;
+	}
+
+	// ----- helper methods -----
+
+	protected void execute(RequestType message, String correlationID) {
+		if (correlationID==null) {
+			execute(message);
+			return;
+		}
+		ResponseFuture<ReturnType> future = futures.get(correlationID);
+		futures.remove(correlationID);
+		if (future==null) {
+			execute(message);
+		} else {
+			try {
+				future.finalizeDone(execute(message));
+			} catch(RuntimeException e) {
+				future.finalizeCancel();
+				throw e;
+			}
+			finally {
+				futures.remove(correlationID);
+			}
+		}
 	}
 
 	// ----- Worker methods (dummy implementation) -----

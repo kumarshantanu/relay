@@ -5,7 +5,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import kumarshantanu.relay.Actor;
 import kumarshantanu.relay.Agent;
-import kumarshantanu.relay.Callback;
 import kumarshantanu.relay.MailboxException;
 import kumarshantanu.relay.impl.DefaultActor;
 import kumarshantanu.relay.impl.DefaultAgent;
@@ -18,17 +17,17 @@ import org.junit.Test;
 public class SimpleTest {
 	
 	private interface ActorFactory {
-		public Actor<String, String> create(Agent ag, Callback<String> callback);
+		public Actor<String, String> create(Agent ag, AtomicLong counter);
 	}
 	
 	@Test
 	public void defaultActorTest() {
 		test(new ActorFactory() {
-			public Actor<String, String> create(Agent ag,
-					Callback<String> callback) {
-				return new DefaultActor<String, String>(ag, callback, null, null, null) {
+			public Actor<String, String> create(Agent ag, final AtomicLong counter) {
+				return new DefaultActor<String, String>(ag, null, null, null) {
 					@Override
 					public String execute(String req) {
+						counter.incrementAndGet();
 						return req;
 					}
 				};
@@ -41,15 +40,7 @@ public class SimpleTest {
 		final AtomicLong counter = new AtomicLong();
 		ExecutorService threadPool = Util.newThreadPool();
 		DefaultAgent ag = new DefaultAgent(threadPool);
-		final Callback<String> callback = new Callback<String>() {
-			public void onReturn(String value) {
-				counter.incrementAndGet();
-			}
-			public void onException(Exception ex) {
-				ex.printStackTrace();
-			}
-		};
-		final Actor<String, String> ac = afactory.create(ag, callback);
+		final Actor<String, String> ac = afactory.create(ag, counter);
 		Runnable sender = new Runnable() {
 			public void run() {
 				try {
