@@ -6,31 +6,31 @@ import java.util.concurrent.Future;
 
 import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.Agent;
-import kumarshantanu.relay.Callback;
 import kumarshantanu.relay.CorrelatedMessage;
 import kumarshantanu.relay.MailboxException;
+import kumarshantanu.relay.Worker;
 
 public final class BatchActor<RequestType> extends
 		AbstractActor<RequestType, RequestType> {
 
-	public final Callback<List<RequestType>> callback;
+	public final Worker<List<RequestType>, ?> worker;
 	public final BatchBuffer<RequestType> batchBuffer = new BatchBuffer<RequestType>();
 	public final int maxBatchSize;
 	public final long flushMillis;
 
-	public BatchActor(Agent agent, Callback<List<RequestType>> callback,
+	public BatchActor(Agent agent, Worker<List<RequestType>, ?> worker,
 			int maxBatchSize, long flushMillis) {
 		super(null, null);
 		this.maxBatchSize = maxBatchSize;
 		this.flushMillis = flushMillis;
 		Util.notNull(agent, "agent");
-		Util.notNull(callback, "callback");
-		this.callback = callback;
+		Util.notNull(worker, "worker");
+		this.worker = worker;
 		agent.register(this);
 	}
 
-	public BatchActor(Agent ag, Callback<List<RequestType>> callback) {
-		this(ag, callback, 50, 1000);
+	public BatchActor(Agent ag, Worker<List<RequestType>, ?> worker) {
+		this(ag, worker, 50, 1000);
 	}
 
 	@Override
@@ -49,16 +49,8 @@ public final class BatchActor<RequestType> extends
 		}
 		public void run() {
 			CURRENT_ACTOR_ID.set(actorID);
-			try {
-				tvcKeeper.incrementBy(messages.size());
-				callback.onReturn(messages);
-			} catch (Exception e) {
-				try {
-					callback.onException(e);
-				} catch (Exception f) {
-					// ignore callback exceptions
-				}
-			}
+			tvcKeeper.incrementBy(messages.size());
+			worker.execute(messages);
 		}
 	}
 

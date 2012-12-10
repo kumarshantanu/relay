@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import kumarshantanu.relay.Callback;
 import kumarshantanu.relay.MailboxException;
+import kumarshantanu.relay.Worker;
 import kumarshantanu.relay.impl.BatchActor;
 import kumarshantanu.relay.impl.DefaultAgent;
 import kumarshantanu.relay.impl.Util;
@@ -15,15 +15,18 @@ import org.junit.Test;
 
 public class BatchTest {
 
-	private class BatchProcessor implements Callback<List<String>> {
+	private class BatchProcessor implements Worker<List<String>, Object> {
 		public final AtomicInteger count;
 		public BatchProcessor(AtomicInteger count) {
 			this.count = count;
 		}
-		public void onReturn(List<String> value) {
+		public Object execute(List<String> value) {
 			count.addAndGet(value.size());
+			return null;
 		}
-		public void onException(Exception ex) {}
+		public boolean isIdempotent() {
+			return false;
+		}
 	}
 
 	private void sendMessages(BatchActor<String> actor, int howMany) {

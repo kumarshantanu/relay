@@ -4,7 +4,6 @@ import java.util.concurrent.Future;
 
 import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.Agent;
-import kumarshantanu.relay.Callback;
 import kumarshantanu.relay.MailboxException;
 
 /**
@@ -18,22 +17,14 @@ import kumarshantanu.relay.MailboxException;
  */
 public abstract class PollingActor<ReturnType> extends AbstractActor<Object, ReturnType> {
 
-	public final Callback<ReturnType> callback;
-
-	public PollingActor(Agent agent, Callback<ReturnType> callback,
-			String actorName, ActorID parentActor) {
+	public PollingActor(Agent agent, String actorName, ActorID parentActor) {
 		super(parentActor, actorName);
 		Util.notNull(agent, "agent");
-		this.callback = callback;
 		agent.register(this);
 	}
 
-	public PollingActor(Agent ag, Callback<ReturnType> callback) {
-		this(ag, callback, null, null);
-	}
-
 	public PollingActor(Agent ag) {
-		this(ag, null, null, null);
+		this(ag, null, null);
 	}
 
 	public abstract boolean poll();
@@ -47,25 +38,8 @@ public abstract class PollingActor<ReturnType> extends AbstractActor<Object, Ret
 		}
 		public void run() {
 			CURRENT_ACTOR_ID.set(actorID);
-			try {
-				tvcKeeper.incrementBy(1);
-				ReturnType val = execute(null);
-				if (callback != null) {
-					try {
-						callback.onReturn(val);
-					} catch (Exception e) {
-						// ignore callback exceptions
-					}
-				}
-			} catch (Exception e) {
-				if (callback != null) {
-					try {
-						callback.onException(e);
-					} catch (Exception f) {
-						// ignore callback exceptions
-					}
-				}
-			}
+			tvcKeeper.incrementBy(1);
+			execute(null);
 		}
 	}
 
