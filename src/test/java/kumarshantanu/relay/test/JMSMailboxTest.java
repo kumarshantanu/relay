@@ -3,14 +3,19 @@ package kumarshantanu.relay.test;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
 
+import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageProducer;
+import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import kumarshantanu.relay.Actor;
 import kumarshantanu.relay.MailboxException;
 import kumarshantanu.relay.impl.DefaultActor;
 import kumarshantanu.relay.impl.DefaultAgent;
+import kumarshantanu.relay.impl.JMSContext;
 import kumarshantanu.relay.impl.JMSMessageSerializer;
 import kumarshantanu.relay.impl.JMSMailbox;
 import kumarshantanu.relay.impl.Util;
@@ -20,6 +25,23 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class JMSMailboxTest {
+
+	public static <Request> JMSMailbox<Request> createMailbox(Session session, String queueName,
+			JMSMessageSerializer<Request> serde) throws JMSException {
+		final Destination destination = session.createQueue(queueName);
+		final MessageProducer producer = session.createProducer(destination);
+		final MessageConsumer consumer = session.createConsumer(destination);
+		final Destination replyTo = session.createTemporaryQueue();
+		final MessageConsumer replyToConsumer = session.createConsumer(replyTo);
+		JMSContext context = new JMSContext() {
+			public void onException(JMSException e) { e.printStackTrace(); }
+			public Destination getReplyToDestination() { return replyTo; }
+			public MessageConsumer getReplyToConsumer() { return replyToConsumer; }
+			public MessageProducer getProducer() { return producer; }
+			public MessageConsumer getConsumer() { return consumer; }
+		};
+		return new JMSMailbox<Request>(context, serde);
+	}
 
 	@Test
 	public void test() throws Exception {
@@ -36,7 +58,7 @@ public class JMSMailboxTest {
 				return ((TextMessage) format).getText();
 			}
 		};
-		JMSMailbox<String> mailbox = JMSMailbox.create(amq.session, amq.queueName, serde);
+		JMSMailbox<String> mailbox = createMailbox(amq.session, amq.queueName, serde);
 		final Actor<String, ?> ac = new DefaultActor<String, Object>(ag, mailbox, null, null) {
 			@Override
 			public Object execute(String req) {

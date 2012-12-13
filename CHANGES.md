@@ -2,6 +2,10 @@
 
 ## TODO
 
+* PrebatchActor for low-latency actors
+* PriorityAgent with Agent.onSend(ActorID) sig for
+* AmqpMailboxTest to demonstrate AMQP queue based mailboxes
+
 ## 2012-Dec-?? / 0.1.0
 
 * Abstractions
@@ -13,7 +17,6 @@
 * Implementation
   * DefaultAgent (polls registered actors sequentially)
   * DefaultActor
-  * AmbientActor
   * BatchActor
   * PollingActor
   * DefaultMailbox
