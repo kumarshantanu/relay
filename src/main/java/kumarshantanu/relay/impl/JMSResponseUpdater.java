@@ -27,8 +27,7 @@ public abstract class JMSResponseUpdater<ReturnType> extends AbstractActor<Messa
 	}
 
 	public boolean isMailboxEmpty() {
-		// TODO delete this method throughout
-		return false;
+		return true; // always return true because this actor has no mailbox
 	}
 
 	public Runnable poll(ActorID actorID) {
