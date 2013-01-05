@@ -6,7 +6,7 @@
 * PriorityAgent with Agent.onSend(ActorID) sig for
 * AmqpMailboxTest to demonstrate AMQP queue based mailboxes
 
-## 2012-Dec-?? / 0.1.0
+## 2013-Jan-?? / 0.1.0
 
 * Abstractions
   * Actor

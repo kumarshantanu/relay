@@ -55,7 +55,7 @@ Please refer the doc/intro.md file in this repo.
 
 ## License
 
-Copyright © 2012 Shantanu Kumar
+Copyright © 2012-2013 Shantanu Kumar
 ([kumar.shantanu@gmail.com](mailto:kumar.shantanu@gmail.com) and
 [@kumarshantanu](http://twitter.com/#!/kumarshantanu))
 
