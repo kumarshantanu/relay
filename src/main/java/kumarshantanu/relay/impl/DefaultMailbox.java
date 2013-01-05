@@ -8,13 +8,14 @@ import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.CorrelatedMessage;
 
 /**
- * Default unbounded mailbox. Note that this implementation stores object
+ * Default unbounded local mailbox. Note that this implementation stores object
  * references; hence it is not space efficient for storing primitives.
  * @author Shantanu Kumar (kumar.shantanu@gmail.com)
  *
  * @param <RequestType>
  */
-public class DefaultMailbox<RequestType> extends AbstractMailbox<RequestType> {
+public class DefaultMailbox<RequestType>
+extends AbstractMailbox<RequestType, CorrelatedMessage<RequestType>> {
 	
 	protected final Semaphore sem = new Semaphore(1);
 

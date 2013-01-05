@@ -4,7 +4,6 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 
 import kumarshantanu.relay.ActorID;
-import kumarshantanu.relay.CorrelatedMessage;
 import kumarshantanu.relay.MailboxException;
 
 /**
@@ -13,7 +12,7 @@ import kumarshantanu.relay.MailboxException;
  *
  * @param <RequestType>
  */
-public class JMSMailbox<RequestType> extends AbstractMailbox<RequestType> {
+public class JMSMailbox<RequestType> extends AbstractMailbox<RequestType, Message> {
 
 	public final JMSContext context;
 	public final JMSMessageSerializer<RequestType> serde;
@@ -52,24 +51,13 @@ public class JMSMailbox<RequestType> extends AbstractMailbox<RequestType> {
 		return false;
 	}
 
-	public CorrelatedMessage<RequestType> poll() throws MailboxException {
-		Message message = null;
+	public Message poll() throws MailboxException {
 		try {
-			message = context.getConsumer().receiveNoWait();
+			return context.getConsumer().receiveNoWait();
 		} catch (JMSException e) {
 			context.onException(e);
 			throw new MailboxException(this, e);
 		}
-		if (message != null) {
-			try {
-				return new CorrelatedMessage<RequestType>(
-						serde.deserialize(message), message.getJMSCorrelationID());
-			} catch (JMSException e) {
-				context.onException(e);
-				throw new MailboxException(this, e);
-			}
-		}
-		return null;
 	}
 
 }

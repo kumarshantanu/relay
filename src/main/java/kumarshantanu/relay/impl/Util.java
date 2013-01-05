@@ -53,9 +53,10 @@ public class Util {
 		}
 	}
 
-	public static <RequestType, ReturnType> Mailbox<RequestType> createMailbox(final Queue<CorrelatedMessage<RequestType>> queue) {
+	public static <RequestType, ReturnType>
+	Mailbox<RequestType, CorrelatedMessage<RequestType>> createMailbox(final Queue<CorrelatedMessage<RequestType>> queue) {
 		notNull(queue, "queue");
-		return new Mailbox<RequestType>() {
+		return new Mailbox<RequestType, CorrelatedMessage<RequestType>>() {
 			public boolean isEmpty() {
 				return queue.isEmpty();
 			}

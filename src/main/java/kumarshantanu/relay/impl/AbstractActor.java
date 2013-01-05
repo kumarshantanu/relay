@@ -15,11 +15,13 @@ implements Actor<RequestType, ReturnType>, ThroughputAware {
 
 	private static final AtomicReference<BigInteger> COUNTER =
 			new AtomicReference<BigInteger>(new BigInteger("0"));
-	
+
+	private static final BigInteger ONE = new BigInteger("1");
+
 	protected static BigInteger nextCounter() {
         for (;;) {
             BigInteger current = COUNTER.get();
-            BigInteger next = current.add(new BigInteger("1"));
+            BigInteger next = current.add(ONE);
             if (COUNTER.compareAndSet(current, next))
                 return next;
         }

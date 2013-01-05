@@ -8,7 +8,7 @@ import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.CorrelatedMessage;
 import kumarshantanu.relay.Mailbox;
 
-public class BatchBuffer<RequestType> implements Mailbox<RequestType> {
+public class BatchBuffer<RequestType> implements Mailbox<RequestType, CorrelatedMessage<RequestType>> {
 
 	private final List<CorrelatedMessage<RequestType>> buffer =
 			new LinkedList<CorrelatedMessage<RequestType>>();

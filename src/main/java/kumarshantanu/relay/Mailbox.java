@@ -7,7 +7,7 @@ package kumarshantanu.relay;
  *
  * @param <RequestType>
  */
-public interface Mailbox<RequestType> {
+public interface Mailbox<RequestType, PollType> {
 
 	/**
 	 * Return true if mailbox is empty, false otherwise.
@@ -21,7 +21,7 @@ public interface Mailbox<RequestType> {
 	 * inserted subject to the data structure type used to hold messages.
 	 * @return
 	 */
-	public CorrelatedMessage<RequestType> poll();
+	public PollType poll();
 
 	/**
 	 * Add message to the mailbox.
