@@ -45,9 +45,12 @@ extends AbstractActor<RequestType, ReturnType> {
 		public void run() {
 			CURRENT_ACTOR_ID.set(actorID);
 			tvcKeeper.incrementBy(1);
-			execute(pollConverter.getMessage(message),
-					pollConverter.getCorrelationID(message));
+			execute(pollConverter.getMessage(message));
 		}
+	}
+
+	protected Runnable createJob(PollType message, ActorID actorID) {
+		return new Job(message, actorID);
 	}
 
 	// ----- Actor methods -----
@@ -61,7 +64,7 @@ extends AbstractActor<RequestType, ReturnType> {
 		if (message == null) {
 			return null;
 		}
-		return new Job(message, actorID);
+		return createJob(message, actorID);
 	}
 
 	public void send(RequestType message) throws MailboxException {

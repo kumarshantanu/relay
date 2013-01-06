@@ -24,4 +24,25 @@ extends GenericActor<RequestType, CorrelatedMessage<RequestType>, ReturnType> {
 		this(agent, null, null, null);
 	}
 
+	private class Job implements Runnable {
+		public final CorrelatedMessage<RequestType> message;
+		public final ActorID actorID;
+		public Job(CorrelatedMessage<RequestType> message, ActorID actorID) {
+			this.message = message;
+			this.actorID = actorID;
+		}
+		public void run() {
+			CURRENT_ACTOR_ID.set(actorID);
+			tvcKeeper.incrementBy(1);
+			executeLocal(pollConverter.getMessage(message),
+					pollConverter.getCorrelationID(message));
+		}
+	}
+
+	@Override
+	protected Runnable createJob(CorrelatedMessage<RequestType> message,
+			ActorID actorID) {
+		return new Job(message, actorID);
+	}
+
 }

@@ -57,7 +57,7 @@ implements Actor<RequestType, ReturnType>, ThroughputAware {
 
 	// ----- helper methods -----
 
-	protected void execute(RequestType message, String correlationID) {
+	protected void executeLocal(RequestType message, String correlationID) {
 		if (correlationID==null) {
 			execute(message);
 			return;
