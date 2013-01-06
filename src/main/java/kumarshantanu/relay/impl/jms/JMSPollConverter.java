@@ -1,7 +1,10 @@
-package kumarshantanu.relay.impl;
+package kumarshantanu.relay.impl.jms;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
+
+import kumarshantanu.relay.impl.PollConverter;
+import kumarshantanu.relay.impl.Util;
 
 public class JMSPollConverter<RequestType> implements PollConverter<RequestType, Message> {
 

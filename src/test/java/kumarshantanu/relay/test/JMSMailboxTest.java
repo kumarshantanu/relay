@@ -15,11 +15,11 @@ import kumarshantanu.relay.Actor;
 import kumarshantanu.relay.MailboxException;
 import kumarshantanu.relay.impl.DefaultAgent;
 import kumarshantanu.relay.impl.GenericActor;
-import kumarshantanu.relay.impl.JMSContext;
-import kumarshantanu.relay.impl.JMSMailbox;
-import kumarshantanu.relay.impl.JMSMessageSerializer;
-import kumarshantanu.relay.impl.JMSPollConverter;
 import kumarshantanu.relay.impl.Util;
+import kumarshantanu.relay.impl.jms.JMSContext;
+import kumarshantanu.relay.impl.jms.JMSMailbox;
+import kumarshantanu.relay.impl.jms.JMSMessageSerializer;
+import kumarshantanu.relay.impl.jms.JMSPollConverter;
 import kumarshantanu.relay.monitoring.ThroughputAware;
 
 import org.junit.Assert;

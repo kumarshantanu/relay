@@ -1,4 +1,4 @@
-package kumarshantanu.relay.impl;
+package kumarshantanu.relay.impl.jms;
 
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -9,6 +9,9 @@ import javax.jms.Message;
 import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.Agent;
 import kumarshantanu.relay.MailboxException;
+import kumarshantanu.relay.impl.AbstractActor;
+import kumarshantanu.relay.impl.ResponseFuture;
+import kumarshantanu.relay.impl.Util;
 
 /**
  * See: http://activemq.apache.org/how-should-i-implement-request-response-with-jms.html

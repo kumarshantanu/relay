@@ -1,10 +1,12 @@
-package kumarshantanu.relay.impl;
+package kumarshantanu.relay.impl.jms;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
 
 import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.MailboxException;
+import kumarshantanu.relay.impl.AbstractMailbox;
+import kumarshantanu.relay.impl.Util;
 
 /**
  * A JMS queue based Mailbox implementation.

@@ -1,4 +1,4 @@
-package kumarshantanu.relay.impl;
+package kumarshantanu.relay.impl.jms;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
