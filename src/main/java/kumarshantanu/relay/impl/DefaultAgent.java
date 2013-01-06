@@ -4,20 +4,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import kumarshantanu.relay.Actor;
-import kumarshantanu.relay.Agent;
-import kumarshantanu.relay.lifecycle.AbstractLifecycleAware;
 
-public class DefaultAgent extends AbstractLifecycleAware implements Agent {
+public class DefaultAgent extends AbstractAgent {
 
-	private static final AtomicCounter COUNTER = new AtomicCounter();
-
-	public final AgentCommon agentCommon = new AgentCommon();
-	
 	public final long idleMillis;
 	public final ExecutorService threadPool;
 	
 	public DefaultAgent(String name, ExecutorService threadPool, long idleMillis) {
-		super(name==null? "DefaultAgent_" + COUNTER.incrementAndGet(): name);
+		super(name);
 		this.idleMillis = idleMillis;
 		this.threadPool = threadPool;
 	}
@@ -51,10 +45,10 @@ public class DefaultAgent extends AbstractLifecycleAware implements Agent {
 			now = System.currentTimeMillis();
 			if (now - drainerTime > 1000) {  // check no more than once a second
 				drainerTime = now;
-				drainer = agentCommon.removeDrained(threadPool, drainer);
+				drainer = removeDrained(threadPool, drainer);
 			}
-			for (String name: agentCommon.ACTORS.keySet()) {
-				Actor<?, ?> a = agentCommon.findActor(name);
+			for (String name: ACTORS.keySet()) {
+				Actor<?, ?> a = findActor(name);
 				if (a != null) {
 					Runnable r = a.poll(a.getActorID());
 					if (r != null) {
@@ -68,28 +62,6 @@ public class DefaultAgent extends AbstractLifecycleAware implements Agent {
 				Util.sleep(steppingIdleMillis);
 			}
 		}
-	}
-	
-	// ----- Actor implementation -----
-	
-	public void register(Actor<?, ?> actor) {
-		agentCommon.register(actor);
-	}
-	
-	public void unregister(Actor<?, ?> actor) {
-		agentCommon.unregister(actor);
-	}
-	
-	public Actor<?, ?> findActor(String name) {
-		return agentCommon.findActor(name);
-	}
-
-	public Iterable<Actor<?, ?>> listActors() {
-		return agentCommon.listActors();
-	}
-	
-	public void drain(Actor<?, ?> actor) {
-		agentCommon.drain(actor);
 	}
 	
 }

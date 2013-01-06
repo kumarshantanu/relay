@@ -59,7 +59,7 @@ public abstract class AbstractLifecycleAware implements LifecycleAware {
         }
     }
     
-    public void run() {
+    public final void run() {
         setState(LifecycleStateEnum.RUNNING);
         try {
             execute();

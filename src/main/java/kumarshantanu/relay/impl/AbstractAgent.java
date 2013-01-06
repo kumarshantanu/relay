@@ -9,20 +9,19 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import kumarshantanu.relay.Actor;
+import kumarshantanu.relay.Agent;
+import kumarshantanu.relay.lifecycle.AbstractLifecycleAware;
 
-/**
- * Common agent functions factored out due to Java's lack of mixins.
- * @author Shantanu Kumar
- *
- */
-public class AgentCommon /*extends AbstractLifecycleAware implements Agent*/ {
+public abstract class AbstractAgent extends AbstractLifecycleAware implements Agent {
+
+	private static final AtomicCounter COUNTER = new AtomicCounter();
 
 	public final Map<String, Actor<?, ?>> ACTORS =
 			new ConcurrentHashMap<String, Actor<?, ?>>();
-	
+
 	public final Collection<Actor<?, ?>> DRAIN_ACTORS =
 			new ConcurrentLinkedQueue<Actor<?,?>>();
-	
+
 	public final Runnable drainer = new Runnable() {
 		public void run() {
 			for (Actor<?, ?> each: DRAIN_ACTORS) {
@@ -32,7 +31,11 @@ public class AgentCommon /*extends AbstractLifecycleAware implements Agent*/ {
 			}
 		}
 	};
-	
+
+	public AbstractAgent(String name) {
+		super(name==null? "Agent_" + COUNTER.incrementAndGet(): name);
+	}
+
 	public Future<?> removeDrained(ExecutorService threadPool , Future<?> f) {
 		if (f == null) {
 			return threadPool.submit(drainer);
@@ -49,10 +52,6 @@ public class AgentCommon /*extends AbstractLifecycleAware implements Agent*/ {
 		return f;
 	}
 	
-	public void run() {
-		throw new IllegalStateException("AgentCommon not meant for invocation");
-	}
-
 	// ----- Agent methods -----
 	
 	public void register(Actor<?, ?> actor) {
