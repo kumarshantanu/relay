@@ -3,8 +3,10 @@ package kumarshantanu.relay;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import kumarshantanu.relay.lifecycle.LifecycleAware;
 
-public interface Agent extends Runnable {
+
+public interface Agent extends Runnable, LifecycleAware {
 
 	/**
 	 * All agents should add themselves to this set upon startup.

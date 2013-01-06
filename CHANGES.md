@@ -5,13 +5,14 @@
 * PrebatchActor for low-latency actors
 * PriorityAgent with Agent.onSend(ActorID) sig for
 * AmqpMailboxTest to demonstrate AMQP queue based mailboxes
+* A way for remote actors to be supervised
 
 ## 2013-Jan-?? / 0.1.0
 
 * Abstractions
-  * Actor
-  * Agent
-  * Callback
+  * Actor (Lifecycle aware)
+  * Agent (Lifecycle aware)
+  * Callback [TODO] Add it back
   * Mailbox
   * Worker
 * Implementation

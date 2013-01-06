@@ -5,6 +5,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class AtomicCounter {
 
+	public static final BigInteger ONE = new BigInteger("1");
+
 	private final AtomicReference<BigInteger> VALUE =
 			new AtomicReference<BigInteger>(new BigInteger("0"));
 
@@ -21,7 +23,7 @@ public class AtomicCounter {
 		BigInteger inc;
 		do {
 			old = VALUE.get();
-			inc = old.add(new BigInteger("1"));
+			inc = old.add(ONE);
 		} while(!VALUE.compareAndSet(old, inc));
 		return inc;
 	}

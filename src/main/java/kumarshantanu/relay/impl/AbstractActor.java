@@ -1,31 +1,19 @@
 package kumarshantanu.relay.impl;
 
-import java.math.BigInteger;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicReference;
 
 import kumarshantanu.relay.Actor;
 import kumarshantanu.relay.ActorID;
+import kumarshantanu.relay.lifecycle.AbstractLifecycleAware;
 import kumarshantanu.relay.monitoring.ThroughputAware;
 import kumarshantanu.relay.monitoring.TimeVersusCountKeeper;
 
 public abstract class AbstractActor<RequestType, ReturnType>
+extends AbstractLifecycleAware
 implements Actor<RequestType, ReturnType>, ThroughputAware {
 
-	private static final AtomicReference<BigInteger> COUNTER =
-			new AtomicReference<BigInteger>(new BigInteger("0"));
-
-	private static final BigInteger ONE = new BigInteger("1");
-
-	protected static BigInteger nextCounter() {
-        for (;;) {
-            BigInteger current = COUNTER.get();
-            BigInteger next = current.add(ONE);
-            if (COUNTER.compareAndSet(current, next))
-                return next;
-        }
-	}
+	private static final AtomicCounter COUNTER = new AtomicCounter();
 
 	public final TimeVersusCountKeeper tvcKeeper = new TimeVersusCountKeeper();
 
@@ -36,6 +24,7 @@ implements Actor<RequestType, ReturnType>, ThroughputAware {
 
 	public AbstractActor(ActorID parentActorId, String actorName,
 			Map<String, ResponseFuture<ReturnType>> futures) {
+		super(actorName);
 		this.parentActorID = parentActorId;
 		if (actorName == null) {
 			this.currentActorID = new ActorID(getDefaultName());
@@ -54,11 +43,16 @@ implements Actor<RequestType, ReturnType>, ThroughputAware {
 	}
 
 	protected static String getDefaultName() {
-		return "Actor_" + nextCounter();
+		return "Actor_" + COUNTER.incrementAndGet();
 	}
 
 	public ActorID getActorID() {
 		return currentActorID;
+	}
+
+	@Override
+	public void execute() {
+		// do nothing, because actors are not instances of Runnable
 	}
 
 	// ----- helper methods -----

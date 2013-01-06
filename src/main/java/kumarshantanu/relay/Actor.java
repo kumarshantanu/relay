@@ -2,6 +2,8 @@ package kumarshantanu.relay;
 
 import java.util.concurrent.Future;
 
+import kumarshantanu.relay.lifecycle.LifecycleAware;
+
 
 /**
  * An actor is a Worker with a Mailbox. One should be able to call an actor
@@ -11,7 +13,7 @@ import java.util.concurrent.Future;
  * @param <RequestType>
  * @param <ReturnType>
  */
-public interface Actor<RequestType, ReturnType> extends Worker<RequestType, ReturnType> {
+public interface Actor<RequestType, ReturnType> extends Worker<RequestType, ReturnType>, LifecycleAware {
 
 	public static final ThreadLocal<ActorID> CURRENT_ACTOR_ID =
 			new ThreadLocal<ActorID>();

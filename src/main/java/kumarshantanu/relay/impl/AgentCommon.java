@@ -9,14 +9,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import kumarshantanu.relay.Actor;
-import kumarshantanu.relay.Agent;
 
 /**
  * Common agent functions factored out due to Java's lack of mixins.
  * @author Shantanu Kumar
  *
  */
-public class AgentCommon implements Agent {
+public class AgentCommon /*extends AbstractLifecycleAware implements Agent*/ {
 
 	public final Map<String, Actor<?, ?>> ACTORS =
 			new ConcurrentHashMap<String, Actor<?, ?>>();

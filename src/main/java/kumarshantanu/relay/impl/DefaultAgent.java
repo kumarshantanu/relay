@@ -5,36 +5,40 @@ import java.util.concurrent.Future;
 
 import kumarshantanu.relay.Actor;
 import kumarshantanu.relay.Agent;
+import kumarshantanu.relay.lifecycle.AbstractLifecycleAware;
 
-public class DefaultAgent implements Agent {
-	
+public class DefaultAgent extends AbstractLifecycleAware implements Agent {
+
+	private static final AtomicCounter COUNTER = new AtomicCounter();
+
 	public final AgentCommon agentCommon = new AgentCommon();
 	
 	public final long idleMillis;
 	public final ExecutorService threadPool;
 	
-	public DefaultAgent(ExecutorService threadPool, long idleMillis) {
+	public DefaultAgent(String name, ExecutorService threadPool, long idleMillis) {
+		super(name==null? "DefaultAgent_" + COUNTER.incrementAndGet(): name);
 		this.idleMillis = idleMillis;
 		this.threadPool = threadPool;
 	}
-	
-	public DefaultAgent(int threadCount, long idleMillis) {
-		this(Util.newThreadPool(threadCount), idleMillis);
+
+	public DefaultAgent(ExecutorService threadPool, long idleMillis) {
+		this(null, threadPool, idleMillis);
+	}
+
+	public DefaultAgent(ExecutorService threadPool) {
+		this(null, threadPool, 200L);
 	}
 	
 	public DefaultAgent(int threadCount) {
-		this(threadCount, 200L);
+		this(null, Util.newThreadPool(threadCount), 200L);
 	}
-	
-	public DefaultAgent(ExecutorService threadPool) {
-		this(threadPool, 200L);
-	}
-	
+
 	public DefaultAgent() {
 		this(Util.optimumThreadCount());
 	}
 	
-	public void run() {
+	public void execute() {
 		ALL_AGENTS.add(this);
 		boolean toSleep = false;
 		long steppingIdleMillis = 1;
