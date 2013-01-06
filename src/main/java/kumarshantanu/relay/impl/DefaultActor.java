@@ -18,8 +18,6 @@ extends GenericActor<RequestType, CorrelatedMessage<RequestType>, ReturnType> {
 			String actorName, ActorID parentActor) {
 		super(agent, mailbox==null? new DefaultMailbox<RequestType>(): mailbox,
 				new LocalPollConverter<RequestType>(), actorName, parentActor);
-//		Util.notNull(agent, "agent");
-//		agent.register(this);
 	}
 
 	public DefaultActor(Agent agent) {

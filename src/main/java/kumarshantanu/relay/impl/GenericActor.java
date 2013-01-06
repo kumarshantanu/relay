@@ -18,34 +18,9 @@ extends AbstractActor<RequestType, ReturnType> {
 		super(parentActor, actorName);
 		Util.notNull(agent, "agent");
 		Util.notNull(mailbox, "mailbox");
+		Util.notNull(pollConverter, "pollConverter");
 		this.mailbox = mailbox;
-		if (pollConverter != null) {
-			this.pollConverter = pollConverter;
-		} else {
-			this.pollConverter = new PollConverter<RequestType, PollType>() {
-				private volatile Class<?> clazz = null;
-				public RequestType getMessage(PollType encoded) {
-					throwX(encoded); return null;
-				}
-				public String getCorrelationID(PollType encoded) {
-					throwX(encoded); return null;
-				}
-				private void throwX(PollType f) {
-					if (clazz == null && f != null) {
-						clazz = f.getClass();
-					}
-					String pollType = clazz == null? "?": clazz.getName();
-					if (f!=null) {
-						pollType = f.getClass().getName();
-					}
-					String msg = GenericActor.this.getClass().getName() +
-							" not initialized with a valid " +
-							PollConverter.class.getName() +
-							" for " + pollType;
-					throw new UnsupportedOperationException(msg);
-				}
-			};
-		}
+		this.pollConverter = pollConverter;
 		agent.register(this);
 	}
 
