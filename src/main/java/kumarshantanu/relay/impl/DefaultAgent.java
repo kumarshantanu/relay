@@ -32,7 +32,7 @@ public class DefaultAgent extends AbstractAgent {
 		this(Util.optimumThreadCount());
 	}
 	
-	public void execute() {
+	public void runInternal() {
 		ALL_AGENTS.add(this);
 		boolean toSleep = false;
 		long steppingIdleMillis = 1;

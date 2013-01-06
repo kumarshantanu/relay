@@ -51,7 +51,7 @@ implements Actor<RequestType, ReturnType>, ThroughputAware {
 	}
 
 	@Override
-	public void execute() {
+	public void runInternal() {
 		// do nothing, because actors are not instances of Runnable
 	}
 

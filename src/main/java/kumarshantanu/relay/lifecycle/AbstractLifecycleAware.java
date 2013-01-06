@@ -62,13 +62,13 @@ public abstract class AbstractLifecycleAware implements LifecycleAware {
     public final void run() {
         setState(LifecycleStateEnum.RUNNING);
         try {
-            execute();
+            runInternal();
         } finally {
             setState(LifecycleStateEnum.STOPPED);
         }
     }
     
-    public abstract void execute();
+    public abstract void runInternal();
     
     @Override
     public String toString() {
