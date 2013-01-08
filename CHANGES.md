@@ -2,6 +2,7 @@
 
 ## TODO
 
+* Let user specify max concurrency for actor - Agent.register(actor, 3);
 * PrebatchActor for low-latency actors
 * PriorityAgent with Agent.onSend(ActorID) sig for
 * AmqpMailboxTest to demonstrate AMQP queue based mailboxes
@@ -12,7 +13,6 @@
 * Abstractions
   * Actor (Lifecycle aware)
   * Agent (Lifecycle aware)
-  * Callback [TODO] Add it back
   * Mailbox
   * Worker
 * Implementation
