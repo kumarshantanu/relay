@@ -11,15 +11,17 @@ public class ResponseFuture<ReturnType> implements Future<ReturnType> {
 	public volatile boolean done = false;
 	public volatile boolean cancelled = false;
 	public volatile ReturnType value = null;
+	public volatile Throwable error = null;
 
 	public void finalizeDone(ReturnType value) {
 		this.done = true;
 		this.value = value;
 	}
 
-	public void finalizeCancel() {
+	public void finalizeCancel(Throwable err) {
 		this.done = true;
 		this.cancelled = true;
+		this.error = err;
 	}
 
 	public boolean cancel(boolean mayInterruptIfRunning) {

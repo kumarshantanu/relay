@@ -32,10 +32,12 @@ public class JMSMailboxTest {
 		final MessageProducer producer = session.createProducer(destination);
 		final MessageConsumer consumer = session.createConsumer(destination);
 		final Destination replyTo = session.createTemporaryQueue();
+		final MessageProducer replyToProducer = session.createProducer(null);
 		final MessageConsumer replyToConsumer = session.createConsumer(replyTo);
 		return new JMSContext() {
 			public void onException(JMSException e) { e.printStackTrace(); }
 			public Destination getReplyToDestination() { return replyTo; }
+			public MessageProducer getReplyToProducer() { return replyToProducer; }
 			public MessageConsumer getReplyToConsumer() { return replyToConsumer; }
 			public MessageProducer getProducer() { return producer; }
 			public MessageConsumer getConsumer() { return consumer; }
@@ -57,7 +59,7 @@ public class JMSMailboxTest {
 				return ((TextMessage) format).getText();
 			}
 		};
-		JMSContext context = createContext(amq.session, amq.queueName);
+		final JMSContext context = createContext(amq.session, amq.queueName);
 		JMSMailbox<String> mailbox = new JMSMailbox<String>(context, serde);
 		JMSPollConverter<String> pollConverter = new JMSPollConverter<String>(context, serde);
 		final Actor<String, ?> ac = new GenericActor<String, Message, Object>(ag, mailbox, pollConverter, null, null) {
@@ -66,7 +68,12 @@ public class JMSMailboxTest {
 				counter.incrementAndGet();
 				return null;
 			}
+			@Override
+			protected void onSuccess(Message poll, Object val) {}
+			@Override
+			protected void onFailure(Message poll, Throwable err) {}
 		};
+
 		final Runnable sender = new Runnable() {
 			public void run() {
 				try {
@@ -87,6 +94,11 @@ public class JMSMailboxTest {
 		Util.sleep(200);
 		amq.close();
 		Assert.assertTrue("Test finished", true);
+	}
+
+	@Test
+	public void jmsRoundtripTest() {
+		//Assert.fail("Not implemented");
 	}
 
 }

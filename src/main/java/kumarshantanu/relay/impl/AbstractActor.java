@@ -57,24 +57,20 @@ implements Actor<RequestType, ReturnType>, ThroughputAware {
 
 	// ----- helper methods -----
 
-	protected void executeLocal(RequestType message, String correlationID) {
-		if (correlationID==null) {
-			execute(message);
-			return;
-		}
-		ResponseFuture<ReturnType> future = futures.get(correlationID);
-		futures.remove(correlationID);
-		if (future==null) {
-			execute(message);
-		} else {
-			try {
-				future.finalizeDone(execute(message));
-			} catch(RuntimeException e) {
-				future.finalizeCancel();
-				throw e;
+	protected void correlateSuccess(String correlationID, ReturnType val) {
+		if (correlationID!=null) {
+			ResponseFuture<ReturnType> future = futures.remove(correlationID);
+			if (future!=null) {
+				future.finalizeDone(val);
 			}
-			finally {
-				futures.remove(correlationID);
+		}
+	}
+
+	protected void correlateFailure(String correlationID, Throwable err) {
+		if (correlationID!=null) {
+			ResponseFuture<ReturnType> future = futures.remove(correlationID);
+			if (future!=null) {
+				future.finalizeCancel(err);
 			}
 		}
 	}

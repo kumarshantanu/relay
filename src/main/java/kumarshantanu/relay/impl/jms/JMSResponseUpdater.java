@@ -49,7 +49,13 @@ public abstract class JMSResponseUpdater<ReturnType> extends AbstractActor<Messa
 			return new Runnable() {
 				public void run() {
 					try {
-						executeLocal(message, message.getJMSCorrelationID());
+						String corID = message.getJMSCorrelationID();
+						try {
+							ReturnType val = execute(message);
+							correlateSuccess(corID, val);
+						} catch(Throwable err) {
+							correlateFailure(corID, err);
+						}
 					} catch (JMSException e) {
 						context.onException(e);
 					}

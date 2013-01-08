@@ -11,6 +11,8 @@ public interface JMSContext {
 
 	public MessageConsumer getConsumer();
 
+	public MessageProducer getReplyToProducer();
+
 	public MessageConsumer getReplyToConsumer();
 
 	public Destination getReplyToDestination();

@@ -35,6 +35,9 @@ extends AbstractActor<RequestType, ReturnType> {
 
 	// ----- internal stuff -----
 
+	protected abstract void onSuccess(PollType poll, ReturnType val);
+	protected abstract void onFailure(PollType poll, Throwable err);
+
 	private class Job implements Runnable {
 		public final PollType message;
 		public final ActorID actorID;
@@ -45,12 +48,13 @@ extends AbstractActor<RequestType, ReturnType> {
 		public void run() {
 			CURRENT_ACTOR_ID.set(actorID);
 			tvcKeeper.incrementBy(1);
-			execute(pollConverter.getMessage(message));
+			try {
+				ReturnType val = execute(pollConverter.getMessage(message));
+				onSuccess(message, val);
+			} catch(Throwable t) {
+				onFailure(message, t);
+			}
 		}
-	}
-
-	protected Runnable createJob(PollType message, ActorID actorID) {
-		return new Job(message, actorID);
 	}
 
 	// ----- Actor methods -----
@@ -64,7 +68,7 @@ extends AbstractActor<RequestType, ReturnType> {
 		if (message == null) {
 			return null;
 		}
-		return createJob(message, actorID);
+		return new Job(message, actorID);
 	}
 
 	public void send(RequestType message) throws MailboxException {
