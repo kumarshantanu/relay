@@ -36,7 +36,9 @@ public class JMSMailbox<RequestType> extends AbstractMailbox<RequestType, Messag
 				msg.setJMSCorrelationID(correlationID);
 			}
 			context.getProducer().send(msg);
+			context.commit();
 		} catch (JMSException e) {
+			context.rollback();
 			context.onException(e);
 			throw new MailboxException(this, e);
 		}
@@ -57,6 +59,7 @@ public class JMSMailbox<RequestType> extends AbstractMailbox<RequestType, Messag
 		try {
 			return context.getConsumer().receiveNoWait();
 		} catch (JMSException e) {
+			context.rollback();
 			context.onException(e);
 			throw new MailboxException(this, e);
 		}

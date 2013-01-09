@@ -53,10 +53,13 @@ public abstract class JMSResponseUpdater<ReturnType> extends AbstractActor<Messa
 						try {
 							ReturnType val = execute(message);
 							correlateSuccess(corID, val);
+							context.commit();
 						} catch(Throwable err) {
 							correlateFailure(corID, err);
+							context.rollback();
 						}
 					} catch (JMSException e) {
+						context.rollback();
 						context.onException(e);
 					}
 				}
