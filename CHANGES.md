@@ -6,13 +6,13 @@
 * PrebatchActor for low-latency actors
 * PriorityAgent with Agent.onSend(ActorID) sig for
 * AmqpMailboxTest to demonstrate AMQP queue based mailboxes
-* A way for remote actors to be supervised
+* A way for local and remote actors to be supervised
 
 ## 2013-Jan-?? / 0.1.0
 
 * Abstractions
   * Actor (Lifecycle aware)
-  * Agent (Lifecycle aware)
+  * Agent (Lifecycle aware) [TODO] lifecycle-aware checks in run()
   * Mailbox
   * Worker
 * Implementation
@@ -21,5 +21,6 @@
   * BatchActor
   * PollingActor
   * DefaultMailbox
-  * JMSMailbox (tested with JMS API using embedded ActiveMQ broker) [TODO] 2-way messaging with Future<T>
-* Documentation
+  * JMSMailbox (tested with JMS API using embedded ActiveMQ broker)
+  * JMSActor
+* [TODO] Documentation
