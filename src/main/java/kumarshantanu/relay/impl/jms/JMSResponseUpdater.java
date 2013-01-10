@@ -51,7 +51,7 @@ public abstract class JMSResponseUpdater<ReturnType> extends AbstractActor<Messa
 					try {
 						String corID = message.getJMSCorrelationID();
 						try {
-							ReturnType val = execute(message);
+							ReturnType val = act(message);
 							correlateSuccess(corID, val);
 							context.commit();
 						} catch(Throwable err) {

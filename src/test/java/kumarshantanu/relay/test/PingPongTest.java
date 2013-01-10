@@ -58,7 +58,7 @@ public class PingPongTest {
 			this.pong = pong;
 		}
 		@Override
-		public Object execute(String req) {
+		public Object act(String req) {
 			try {
 				long val = counter.incrementAndGet();
 				if (val < MAX_COUNT) {
@@ -80,7 +80,7 @@ public class PingPongTest {
 			this.ping = ping;
 		}
 		@Override
-		public Object execute(String req) {
+		public Object act(String req) {
 			try {
 				ping.send("pong");
 			} catch (MailboxException e) {

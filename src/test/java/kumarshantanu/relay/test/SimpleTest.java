@@ -26,7 +26,7 @@ public class SimpleTest {
 			public Actor<String, String> create(Agent ag, final AtomicLong counter) {
 				return new DefaultActor<String, String>(ag, null, null, null) {
 					@Override
-					public String execute(String req) {
+					public String act(String req) {
 						counter.incrementAndGet();
 						return req;
 					}

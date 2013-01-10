@@ -25,7 +25,7 @@ public class PollingTest {
 				return pollState.get();
 			}
 			@Override
-			public String execute(Object req) {
+			public String act(Object req) {
 				executeRan.set(true);
 				return "foo";
 			}

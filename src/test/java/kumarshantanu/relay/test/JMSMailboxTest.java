@@ -65,7 +65,7 @@ public class JMSMailboxTest {
 		ac = new JMSActor<String, String>(
 				ag, context, mailbox, pollConverter, serde) {
 			@Override
-			public String execute(String req) {
+			public String act(String req) {
 				counter.incrementAndGet();
 				return req;
 			}
@@ -122,7 +122,7 @@ public class JMSMailboxTest {
 	public void roundtripTest() throws InterruptedException, ExecutionException {
 		JMSResponseUpdater<String> updater = new JMSResponseUpdater<String>(ag, context, ac.futures) {
 			@Override
-			public String execute(Message answer) {
+			public String act(Message answer) {
 				try {
 					return ((TextMessage) answer).getText();
 				} catch (JMSException e) {

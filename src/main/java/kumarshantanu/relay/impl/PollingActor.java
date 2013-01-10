@@ -39,7 +39,7 @@ public abstract class PollingActor<ReturnType> extends AbstractActor<Object, Ret
 		public void run() {
 			CURRENT_ACTOR_ID.set(actorID);
 			tvcKeeper.incrementBy(1);
-			execute(null);
+			act(null);
 		}
 	}
 

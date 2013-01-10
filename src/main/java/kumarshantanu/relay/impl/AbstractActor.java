@@ -79,7 +79,7 @@ implements Actor<RequestType, ReturnType>, ThroughputAware {
 
 	public boolean isIdempotent() { return false; }
 
-	public abstract ReturnType execute(RequestType req);
+	public abstract ReturnType act(RequestType req);
 
 	// ----- ThroughputAware implementation -----
 

@@ -20,7 +20,7 @@ public class BatchTest {
 		public BatchProcessor(AtomicInteger count) {
 			this.count = count;
 		}
-		public Object execute(List<String> value) {
+		public Object act(List<String> value) {
 			count.addAndGet(value.size());
 			return null;
 		}

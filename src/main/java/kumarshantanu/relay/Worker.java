@@ -20,6 +20,6 @@ public interface Worker<RequestType, ReturnType> {
 	 * @param req
 	 * @return
 	 */
-	public ReturnType execute(RequestType req);
+	public ReturnType act(RequestType req);
 	
 }

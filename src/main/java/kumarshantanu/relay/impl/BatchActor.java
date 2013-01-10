@@ -34,7 +34,7 @@ public final class BatchActor<RequestType> extends
 	}
 
 	@Override
-	public RequestType execute(RequestType req) {
+	public RequestType act(RequestType req) {
 		throw new IllegalStateException("BatchActor.execute() should never be called");
 	}
 
@@ -50,7 +50,7 @@ public final class BatchActor<RequestType> extends
 		public void run() {
 			CURRENT_ACTOR_ID.set(actorID);
 			tvcKeeper.incrementBy(messages.size());
-			worker.execute(messages);
+			worker.act(messages);
 		}
 	}
 

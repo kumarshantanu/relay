@@ -49,7 +49,7 @@ extends AbstractActor<RequestType, ReturnType> {
 			CURRENT_ACTOR_ID.set(actorID);
 			tvcKeeper.incrementBy(1);
 			try {
-				ReturnType val = execute(pollConverter.getMessage(message));
+				ReturnType val = act(pollConverter.getMessage(message));
 				onSuccess(message, val);
 			} catch(Throwable t) {
 				onFailure(message, t);
