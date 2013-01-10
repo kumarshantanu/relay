@@ -4,6 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import kumarshantanu.relay.Actor;
+import kumarshantanu.relay.lifecycle.LifecycleState.LifecycleStateEnum;
 
 public class DefaultAgent extends AbstractAgent {
 
@@ -39,7 +40,7 @@ public class DefaultAgent extends AbstractAgent {
 		long now = System.currentTimeMillis();
 		long drainerTime = now;
 		Future<?> drainer = null;
-		while (true) {
+		LOOP: while (true) {
 			toSleep = true;
 			steppingIdleMillis = Math.min(steppingIdleMillis * 2, idleMillis);
 			now = System.currentTimeMillis();
@@ -48,6 +49,17 @@ public class DefaultAgent extends AbstractAgent {
 				drainer = removeDrained(threadPool, drainer);
 			}
 			for (String name: ACTORS.keySet()) {
+				// check Lifecycle status
+				final LifecycleStateEnum state = getState();
+				if (state == LifecycleStateEnum.STOPPED ||
+						state == LifecycleStateEnum.FORCE_STOPPED) {
+					ALL_AGENTS.remove(this);
+					break LOOP;
+				}
+				if (state == LifecycleStateEnum.SUSPENDED) {
+					toSleep = true;
+					break;
+				}
 				Actor<?, ?> a = findActor(name);
 				if (a != null) {
 					Runnable r = a.poll(a.getActorID());
