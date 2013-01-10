@@ -12,7 +12,7 @@
 
 * Abstractions
   * Actor (Lifecycle aware)
-  * Agent (Lifecycle aware) [TODO] lifecycle-aware checks in run()
+  * Agent (Lifecycle aware)
   * Mailbox
   * Worker
 * Implementation
@@ -22,5 +22,5 @@
   * PollingActor
   * DefaultMailbox
   * JMSMailbox (tested with JMS API using embedded ActiveMQ broker)
-  * JMSActor
+  * JMSActor [TODO] figure out how to mix transactions with JMS mailboxes
 * [TODO] Documentation
