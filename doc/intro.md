@@ -27,10 +27,10 @@ sleeps when idling in order to free the CPU resources.
 
 The following _Actor_ implementations are provided:
 
-* AmbientActor
-* BatchActor - Batches up the mailbox messages on threshold; processes in bulk
 * DefaultActor - the standard actor implementation for use in most cases
+* BatchActor - Batches up the mailbox messages on threshold; processes in bulk
 * PollingActor - used to poll some state (instead of mailbox) for readiness
+* JMSActor - Uses JMSMailbox to send messages, typically in distributed fashion
 
 
 ## Mailbox

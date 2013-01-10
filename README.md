@@ -27,17 +27,17 @@ Instantiate actors; send messages to them:
 ```java
 ExecutorService threadPool = Util.newThreadPool(); // instantiate a thread-pool
 DefaultAgent ag = new DefaultAgent(threadPool);    // instantiate an agent
-final DefaultActor<String, String> actorB = new DefaultActor<String, String> {
+final DefaultActor<String, String> actorB = new DefaultActor<String, String>() {
     @Override
-    public String execute(String req) {
+    public String act(String req) {
         String ret = "Received message: " + req;
         System.out.println(ret);
         return ret;     // actual processing here
     }
 };                      // instantiate actor B
-DefaultActor<String, String> actorA = new DefaultActor<String, String> {
+DefaultActor<String, String> actorA = new DefaultActor<String, String>() {
     @Override
-    public String execute(String req) {
+    public String act(String req) {
         String ret = "Forwarding message: " + req;
         actorB.send(ret);
         System.out.println(ret);
