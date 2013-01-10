@@ -38,6 +38,7 @@ public class PollingTest {
 		Assert.assertTrue("poll() should return true", actor.poll());
 		Assert.assertTrue("executeRan should return true", executeRan.get());
 		pollState.set(false);
+		ag.stop();
 	}
 
 }

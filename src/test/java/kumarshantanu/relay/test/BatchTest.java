@@ -54,6 +54,7 @@ public class BatchTest {
 		Assert.assertEquals(5, batchProcessor.count.get());
 		Util.sleep(200);
 		Assert.assertEquals(8, batchProcessor.count.get());
+		ag.stop();
 	}
 
 }

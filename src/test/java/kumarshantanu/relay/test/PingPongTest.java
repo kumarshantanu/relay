@@ -46,6 +46,7 @@ public class PingPongTest {
 		h.doTimes(PERF_TEST, counter, dummy, "Perf test");
 		System.out.println(((ThroughputAware) ping).getThroughputString());
 		Assert.assertTrue("Test finished", true);
+		ag.stop();
 	}
 
 	public class PingActor extends DefaultActor<String, Object> {

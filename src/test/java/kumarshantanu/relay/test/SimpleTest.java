@@ -58,6 +58,7 @@ public class SimpleTest {
 		h.doTimes(2500000, counter, sender, "Perf test");
 		System.out.println(((ThroughputAware) ac).getThroughputString());
 		Assert.assertTrue("Test finished", true);
+		ag.stop();
 	}
 	
 }

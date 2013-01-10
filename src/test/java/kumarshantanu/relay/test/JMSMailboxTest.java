@@ -13,7 +13,6 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
-import kumarshantanu.relay.Actor;
 import kumarshantanu.relay.MailboxException;
 import kumarshantanu.relay.impl.AbstractActor;
 import kumarshantanu.relay.impl.DefaultAgent;
@@ -87,6 +86,7 @@ public class JMSMailboxTest {
 	public static void cleanup() throws Exception {
 		ag.unregister(ac);
 		amq.close();
+		ag.stop();
 	}
 
 	public static JMSContext createContext(final Session session, String queueName) throws JMSException {
