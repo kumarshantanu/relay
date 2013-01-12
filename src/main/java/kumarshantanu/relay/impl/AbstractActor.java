@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import kumarshantanu.relay.Actor;
 import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.lifecycle.AbstractLifecycleAware;
+import kumarshantanu.relay.lifecycle.LifecycleState.LifecycleStateEnum;
 import kumarshantanu.relay.monitoring.ThroughputAware;
 import kumarshantanu.relay.monitoring.TimeVersusCountKeeper;
 
@@ -36,6 +37,7 @@ implements Actor<RequestType, ReturnType>, ThroughputAware {
 		} else {
 			this.futures = futures;
 		}
+		setState(LifecycleStateEnum.RUNNING);
 	}
 
 	public AbstractActor(ActorID parentActorId, String actorName) {
