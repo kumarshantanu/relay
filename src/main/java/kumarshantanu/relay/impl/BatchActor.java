@@ -10,8 +10,7 @@ import kumarshantanu.relay.CorrelatedMessage;
 import kumarshantanu.relay.MailboxException;
 import kumarshantanu.relay.Worker;
 
-public final class BatchActor<RequestType> extends
-		AbstractActor<RequestType, RequestType> {
+public class BatchActor<RequestType> extends AbstractActor<RequestType, RequestType> {
 
 	public final Worker<List<RequestType>, ?> worker;
 	public final BatchBuffer<RequestType> batchBuffer = new BatchBuffer<RequestType>();
@@ -40,6 +39,14 @@ public final class BatchActor<RequestType> extends
 
 	// ----- internal stuff -----
 
+	protected void onSuccess(List<RequestType> messages, Object val) {
+		// do nothing
+	}
+
+	protected void onFailure(List<RequestType> messages, Throwable err) {
+		err.printStackTrace();
+	}
+
 	private class Job implements Runnable {
 		public final List<RequestType> messages;
 		public final ActorID actorID;
@@ -50,7 +57,12 @@ public final class BatchActor<RequestType> extends
 		public void run() {
 			CURRENT_ACTOR_ID.set(actorID);
 			tvcKeeper.incrementBy(messages.size());
-			worker.act(messages);
+			try {
+				Object val = worker.act(messages);
+				onSuccess(messages, val);
+			} catch(Throwable err) {
+				onFailure(messages, err);
+			}
 		}
 	}
 
