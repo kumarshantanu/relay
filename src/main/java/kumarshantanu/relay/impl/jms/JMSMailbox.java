@@ -48,13 +48,6 @@ public class JMSMailbox<RequestType> extends AbstractMailbox<RequestType, Messag
 		throw new MailboxException(this, "cancel is not supported on JmsMailbox");
 	}
 
-	/**
-	 * Cannot determine if JMS queue is empty or not, so always return false;
-	 */
-	public boolean isEmpty() {
-		return false;
-	}
-
 	public Message poll() throws MailboxException {
 		try {
 			return context.getConsumer().receiveNoWait();

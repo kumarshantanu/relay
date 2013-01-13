@@ -10,12 +10,6 @@ package kumarshantanu.relay;
 public interface Mailbox<RequestType, PollType> {
 
 	/**
-	 * Return true if mailbox is empty, false otherwise.
-	 * @return
-	 */
-	public boolean isEmpty();
-
-	/**
 	 * Poll the mailbox and return message if available, null otherwise. Note
 	 * that the messages may or may not be returned in the order they were
 	 * inserted subject to the data structure type used to hold messages.

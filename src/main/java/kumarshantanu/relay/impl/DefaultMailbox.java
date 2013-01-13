@@ -30,15 +30,6 @@ extends AbstractMailbox<RequestType, CorrelatedMessage<RequestType>> {
 		this(new LinkedList<CorrelatedMessage<RequestType>>());
 	}
 
-	public boolean isEmpty() {
-		sem.acquireUninterruptibly();
-		try {
-			return queue.isEmpty();
-		} finally {
-			sem.release();
-		}
-	}
-	
 	public void add(RequestType message, ActorID actorID, String correlationID) {
 		sem.acquireUninterruptibly();
 		try {

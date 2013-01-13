@@ -57,9 +57,6 @@ public class Util {
 	Mailbox<RequestType, CorrelatedMessage<RequestType>> createMailbox(final Queue<CorrelatedMessage<RequestType>> queue) {
 		notNull(queue, "queue");
 		return new Mailbox<RequestType, CorrelatedMessage<RequestType>>() {
-			public boolean isEmpty() {
-				return queue.isEmpty();
-			}
 			public void add(RequestType message, ActorID actorID, String correlationID) throws MailboxException {
 				try {
 					queue.add(new CorrelatedMessage<RequestType>(message, correlationID));

@@ -39,10 +39,6 @@ public class BatchBuffer<RequestType> implements Mailbox<RequestType, Correlated
 		buffer.add(new CorrelatedMessage<RequestType>(element, correlationID));
 	}
 
-	public boolean isEmpty() {
-		return buffer.isEmpty();
-	}
-
 	public synchronized CorrelatedMessage<RequestType> poll() {
 		if (!buffer.isEmpty()) {
 			return buffer.remove(0);
