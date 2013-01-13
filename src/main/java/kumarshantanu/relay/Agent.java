@@ -28,14 +28,6 @@ public interface Agent extends Runnable, LifecycleAware {
 	public void unregister(Actor<?, ?> actor);
 
 	/**
-	 * Ensure that the actor will not be garbage collected until its mailbox is
-	 * empty. Whether the actor will be garbage collected after the mailbox is
-	 * empty depends on whether you hold a reference to the actor.
-	 * @param actor
-	 */
-	public void drain(Actor<?, ?> actor);
-
-	/**
 	 * Given the actor name find the actor instance and return it. Return null
 	 * if no actor instance is found.
 	 * @param name

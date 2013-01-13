@@ -1,7 +1,6 @@
 package kumarshantanu.relay.impl;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 
 import kumarshantanu.relay.Actor;
 import kumarshantanu.relay.lifecycle.LifecycleState.LifecycleStateEnum;
@@ -37,17 +36,9 @@ public class DefaultAgent extends AbstractAgent {
 		ALL_AGENTS.add(this);
 		boolean toSleep = false;
 		long steppingIdleMillis = 1;
-		long now = System.currentTimeMillis();
-		long drainerTime = now;
-		Future<?> drainer = null;
 		LOOP: while (true) {
 			toSleep = true;
 			steppingIdleMillis = Math.min(steppingIdleMillis * 2, idleMillis);
-			now = System.currentTimeMillis();
-			if (now - drainerTime > 1000) {  // check no more than once a second
-				drainerTime = now;
-				drainer = removeDrained(threadPool, drainer);
-			}
 			for (String name: ACTORS.keySet()) {
 				// check Lifecycle status
 				final LifecycleStateEnum state = getState();
