@@ -19,7 +19,6 @@ public class AbstractActorDecorator<RequestType, ReturnType> implements Actor<Re
 	public boolean isIdempotent() { return orig.isIdempotent(); }
 	public ReturnType act(RequestType req) { return orig.act(req); }
 
-	public boolean isMailboxEmpty() { return orig.isMailboxEmpty(); }
 	public Runnable poll(ActorID actorID) { return orig.poll(actorID); }
 	public void send(RequestType message) throws MailboxException { orig.send(message); }
 	public Future<ReturnType> send(RequestType message, boolean returnFuture)

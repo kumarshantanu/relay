@@ -59,10 +59,6 @@ extends AbstractActor<RequestType, ReturnType> {
 
 	// ----- Actor methods -----
 
-	public boolean isMailboxEmpty() {
-		return mailbox.isEmpty();
-	}
-
 	public Runnable poll(ActorID actorID) {
 		final PollType message = mailbox.poll();
 		if (message == null) {

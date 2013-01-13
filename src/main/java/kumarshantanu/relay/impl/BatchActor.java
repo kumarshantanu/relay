@@ -56,10 +56,6 @@ public final class BatchActor<RequestType> extends
 
 	// ----- Actor methods -----
 
-	public boolean isMailboxEmpty() {
-		return batchBuffer.isEmpty();
-	}
-
 	public Runnable poll(ActorID actorID) {
 		if (batchBuffer.size() < maxBatchSize &&
 				batchBuffer.flushedAt + flushMillis > System.currentTimeMillis()) {

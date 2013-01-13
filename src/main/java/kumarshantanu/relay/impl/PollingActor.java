@@ -45,10 +45,6 @@ public abstract class PollingActor<ReturnType> extends AbstractActor<Object, Ret
 
 	// ----- Actor methods -----
 
-	public boolean isMailboxEmpty() {
-		return true;
-	}
-
 	public Runnable poll(ActorID actorID) {
 		if (poll()) {
 			return new Job(actorID);

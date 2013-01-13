@@ -33,10 +33,6 @@ public abstract class JMSResponseUpdater<ReturnType> extends AbstractActor<Messa
 		agent.register(this);
 	}
 
-	public boolean isMailboxEmpty() {
-		return true; // always return true because this actor has no mailbox
-	}
-
 	public Runnable poll(ActorID actorID) {
 		final Message message;
 		try {

@@ -18,8 +18,6 @@ public interface Actor<RequestType, ReturnType> extends Worker<RequestType, Retu
 	public static final ThreadLocal<ActorID> CURRENT_ACTOR_ID =
 			new ThreadLocal<ActorID>();
 
-	public abstract boolean isMailboxEmpty();
-
 	/**
 	 * Poll the mailbox for messages. If mailbox is empty, return null. If a
 	 * message is found, return a Runnable instance that processes the message
