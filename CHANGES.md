@@ -16,11 +16,12 @@
   * Mailbox
   * Worker
 * Implementation
-  * DefaultAgent (polls registered actors sequentially)
-  * DefaultActor
-  * BatchActor
-  * PollingActor
-  * DefaultMailbox
-  * JMSMailbox (tested with JMS API using embedded ActiveMQ broker)
-  * JMSActor [TODO] figure out how to mix transactions with JMS mailboxes
+  * DefaultAgent    - polls/invokes registered actors in round-robin order
+  * DefaultActor    - actor with local mailbox
+  * DisposableActor - decorator, for creating ephemeral, short-lived actor
+  * BatchActor      - actor that buffers messages and processes in a batch
+  * PollingActor    - actor without a mailbox; polls to find next job
+  * DefaultMailbox  - local mailbox, used by DefaultActor
+  * JMSMailbox      - JMS based mailbox (tested with embedded ActiveMQ broker)
+  * JMSActor        - actor that uses JMSMailbox for message passing
 * [TODO] Documentation
