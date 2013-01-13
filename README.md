@@ -44,6 +44,8 @@ DefaultActor<String, String> actorA = new DefaultActor<String, String>() {
         return ret;     // actual processing here
     }
 };                      // instantiate actor A
+ag.register(actorA);
+ag.register(actorB);
 threadPool.execute(ag); // start the agent (same thread-pool not necessary)
 actor.send("foo");      // send message to the actor
 ```
