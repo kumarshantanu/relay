@@ -4,7 +4,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
 
 import kumarshantanu.relay.Actor;
-import kumarshantanu.relay.Agent;
 import kumarshantanu.relay.MailboxException;
 import kumarshantanu.relay.impl.DefaultActor;
 import kumarshantanu.relay.impl.DefaultAgent;
@@ -17,14 +16,14 @@ import org.junit.Test;
 public class SimpleTest {
 	
 	private interface ActorFactory {
-		public Actor<String, String> create(Agent ag, AtomicLong counter);
+		public Actor<String, String> create(AtomicLong counter);
 	}
 	
 	@Test
 	public void defaultActorTest() {
 		test(new ActorFactory() {
-			public Actor<String, String> create(Agent ag, final AtomicLong counter) {
-				return new DefaultActor<String, String>(ag, null, null, null) {
+			public Actor<String, String> create(final AtomicLong counter) {
+				return new DefaultActor<String, String>() {
 					@Override
 					public String act(String req) {
 						counter.incrementAndGet();
@@ -40,7 +39,8 @@ public class SimpleTest {
 		final AtomicLong counter = new AtomicLong();
 		ExecutorService threadPool = Util.newThreadPool();
 		DefaultAgent ag = new DefaultAgent(threadPool);
-		final Actor<String, String> ac = afactory.create(ag, counter);
+		final Actor<String, String> ac = afactory.create(counter);
+		ag.register(ac);
 		Runnable sender = new Runnable() {
 			public void run() {
 				try {

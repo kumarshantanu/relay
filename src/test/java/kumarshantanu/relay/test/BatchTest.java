@@ -44,7 +44,8 @@ public class BatchTest {
 		DefaultAgent ag = new DefaultAgent(threadPool);
 		final AtomicInteger count = new AtomicInteger(0);
 		BatchProcessor batchProcessor = new BatchProcessor(count);
-		BatchActor<String> actor = new BatchActor<String>(ag, batchProcessor, 5, 500);
+		BatchActor<String> actor = new BatchActor<String>(batchProcessor, 5, 500);
+		ag.register(actor);
 		threadPool.execute(ag);
 		sendMessages(actor, 5);
 		Util.sleep(200);

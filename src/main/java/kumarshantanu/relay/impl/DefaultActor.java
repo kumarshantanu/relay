@@ -1,7 +1,6 @@
 package kumarshantanu.relay.impl;
 
 import kumarshantanu.relay.ActorID;
-import kumarshantanu.relay.Agent;
 import kumarshantanu.relay.CorrelatedMessage;
 
 /**
@@ -14,14 +13,14 @@ import kumarshantanu.relay.CorrelatedMessage;
 public abstract class DefaultActor<RequestType, ReturnType>
 extends GenericActor<RequestType, CorrelatedMessage<RequestType>, ReturnType> {
 
-	public DefaultActor(Agent agent, AbstractMailbox<RequestType, CorrelatedMessage<RequestType>> mailbox,
+	public DefaultActor(AbstractMailbox<RequestType, CorrelatedMessage<RequestType>> mailbox,
 			String actorName, ActorID parentActor) {
-		super(agent, mailbox==null? new DefaultMailbox<RequestType>(): mailbox,
+		super(mailbox==null? new DefaultMailbox<RequestType>(): mailbox,
 				new LocalPollConverter<RequestType>(), actorName, parentActor);
 	}
 
-	public DefaultActor(Agent agent) {
-		this(agent, null, null, null);
+	public DefaultActor() {
+		this(null, null, null);
 	}
 
 	@Override

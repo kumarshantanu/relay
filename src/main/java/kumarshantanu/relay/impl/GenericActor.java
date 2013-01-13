@@ -3,7 +3,6 @@ package kumarshantanu.relay.impl;
 import java.util.concurrent.Future;
 
 import kumarshantanu.relay.ActorID;
-import kumarshantanu.relay.Agent;
 import kumarshantanu.relay.MailboxException;
 
 public abstract class GenericActor<RequestType, PollType, ReturnType>
@@ -12,25 +11,23 @@ extends AbstractActor<RequestType, ReturnType> {
 	public final AbstractMailbox<RequestType, PollType> mailbox;
 	public final PollConverter<RequestType, PollType> pollConverter;
 
-	public GenericActor(Agent agent, AbstractMailbox<RequestType, PollType> mailbox,
+	public GenericActor(AbstractMailbox<RequestType, PollType> mailbox,
 			PollConverter<RequestType, PollType> pollConverter,
 			String actorName, ActorID parentActor) {
 		super(parentActor, actorName);
-		Util.notNull(agent, "agent");
 		Util.notNull(mailbox, "mailbox");
 		Util.notNull(pollConverter, "pollConverter");
 		this.mailbox = mailbox;
 		this.pollConverter = pollConverter;
-		agent.register(this);
 	}
 
-	public GenericActor(Agent agent, AbstractMailbox<RequestType, PollType> mailbox,
+	public GenericActor(AbstractMailbox<RequestType, PollType> mailbox,
 			PollConverter<RequestType, PollType> pollConverter) {
-		this(agent, mailbox, pollConverter, null, null);
+		this(mailbox, pollConverter, null, null);
 	}
 
-	public GenericActor(Agent agent, AbstractMailbox<RequestType, PollType> mailbox) {
-		this(agent, mailbox, null, null, null);
+	public GenericActor(AbstractMailbox<RequestType, PollType> mailbox) {
+		this(mailbox, null, null, null);
 	}
 
 	// ----- internal stuff -----

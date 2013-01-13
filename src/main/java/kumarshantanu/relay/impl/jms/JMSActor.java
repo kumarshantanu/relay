@@ -7,7 +7,6 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 
 import kumarshantanu.relay.ActorID;
-import kumarshantanu.relay.Agent;
 import kumarshantanu.relay.impl.GenericActor;
 import kumarshantanu.relay.impl.Util;
 
@@ -17,23 +16,22 @@ extends GenericActor<RequestType, Message, ReturnType> {
 	public final JMSContext context;
 	public final JMSMessageSerializer<ReturnType> returnSerde;
 
-	public JMSActor(Agent agent, JMSContext context,
+	public JMSActor(JMSContext context,
 			JMSMailbox<RequestType> mailbox,
 			JMSPollConverter<RequestType> pollConverter,
 			JMSMessageSerializer<ReturnType> returnSerde,
 			String actorName, ActorID parentActor) {
-		super(agent, mailbox, pollConverter, actorName, parentActor);
+		super(mailbox, pollConverter, actorName, parentActor);
 		Util.notNull(context, "context");
 		Util.notNull(returnSerde, "returnSerde");
 		this.context = context;
 		this.returnSerde = returnSerde;
 	}
 
-	public JMSActor(Agent agent, JMSContext context,
-			JMSMailbox<RequestType> mailbox,
+	public JMSActor(JMSContext context, JMSMailbox<RequestType> mailbox,
 			JMSPollConverter<RequestType> pollConverter,
 			JMSMessageSerializer<ReturnType> returnSerde) {
-		this(agent, context, mailbox, pollConverter, returnSerde, null, null);
+		this(context, mailbox, pollConverter, returnSerde, null, null);
 	}
 
 	@Override

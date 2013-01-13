@@ -3,7 +3,6 @@ package kumarshantanu.relay.impl;
 import java.util.concurrent.Future;
 
 import kumarshantanu.relay.ActorID;
-import kumarshantanu.relay.Agent;
 import kumarshantanu.relay.MailboxException;
 
 /**
@@ -17,14 +16,12 @@ import kumarshantanu.relay.MailboxException;
  */
 public abstract class PollingActor<ReturnType> extends AbstractActor<Object, ReturnType> {
 
-	public PollingActor(Agent agent, String actorName, ActorID parentActor) {
+	public PollingActor(String actorName, ActorID parentActor) {
 		super(parentActor, actorName);
-		Util.notNull(agent, "agent");
-		agent.register(this);
 	}
 
-	public PollingActor(Agent ag) {
-		this(ag, null, null);
+	public PollingActor() {
+		this(null, null);
 	}
 
 	public abstract boolean poll();

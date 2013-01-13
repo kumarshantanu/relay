@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 import kumarshantanu.relay.ActorID;
-import kumarshantanu.relay.Agent;
 import kumarshantanu.relay.CorrelatedMessage;
 import kumarshantanu.relay.MailboxException;
 import kumarshantanu.relay.Worker;
@@ -17,19 +16,17 @@ public class BatchActor<RequestType> extends AbstractActor<RequestType, RequestT
 	public final int maxBatchSize;
 	public final long flushMillis;
 
-	public BatchActor(Agent agent, Worker<List<RequestType>, ?> worker,
+	public BatchActor(Worker<List<RequestType>, ?> worker,
 			int maxBatchSize, long flushMillis) {
 		super(null, null);
 		this.maxBatchSize = maxBatchSize;
 		this.flushMillis = flushMillis;
-		Util.notNull(agent, "agent");
 		Util.notNull(worker, "worker");
 		this.worker = worker;
-		agent.register(this);
 	}
 
-	public BatchActor(Agent ag, Worker<List<RequestType>, ?> worker) {
-		this(ag, worker, 50, 1000);
+	public BatchActor(Worker<List<RequestType>, ?> worker) {
+		this(worker, 50, 1000);
 	}
 
 	@Override

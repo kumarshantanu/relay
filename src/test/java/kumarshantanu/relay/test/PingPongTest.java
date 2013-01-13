@@ -4,7 +4,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
 
 import kumarshantanu.relay.Actor;
-import kumarshantanu.relay.Agent;
 import kumarshantanu.relay.MailboxException;
 import kumarshantanu.relay.impl.DefaultActor;
 import kumarshantanu.relay.impl.DefaultAgent;
@@ -24,8 +23,10 @@ public class PingPongTest {
 		Assert.assertTrue("Test started", true);
 		ExecutorService threadPool = Util.newThreadPool();
 		DefaultAgent ag = new DefaultAgent(threadPool);
-		PingActor ping = new PingActor(ag);
-		PongActor pong = new PongActor(ag);
+		PingActor ping = new PingActor();
+		ag.register(ping);
+		PongActor pong = new PongActor();
+		ag.register(pong);
 		ping.setPong(pong);
 		pong.setPing(ping);
 		// --
@@ -51,9 +52,6 @@ public class PingPongTest {
 
 	public class PingActor extends DefaultActor<String, Object> {
 		private PongActor pong = null;
-		public PingActor(Agent ag) {
-			super(ag);
-		}
 		public void setPong(PongActor pong) {
 			this.pong = pong;
 		}
@@ -73,9 +71,6 @@ public class PingPongTest {
 
 	public class PongActor extends DefaultActor<String, Object> {
 		private PingActor ping = null;
-		public PongActor(Agent ag) {
-			super(ag);
-		}
 		public void setPing(PingActor ping) {
 			this.ping = ping;
 		}

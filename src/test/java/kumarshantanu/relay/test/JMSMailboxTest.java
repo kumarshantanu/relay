@@ -62,14 +62,14 @@ public class JMSMailboxTest {
 		mailbox = new JMSMailbox<String>(context, serde);
 		pollConverter = new JMSPollConverter<String>(context, serde);
 		counter = new AtomicLong();
-		ac = new JMSActor<String, String>(
-				ag, context, mailbox, pollConverter, serde) {
+		ac = new JMSActor<String, String>(context, mailbox, pollConverter, serde) {
 			@Override
 			public String act(String req) {
 				counter.incrementAndGet();
 				return req;
 			}
 		};
+		ag.register(ac);
 		sender = new Runnable() {
 			public void run() {
 				try {
@@ -120,7 +120,7 @@ public class JMSMailboxTest {
 
 	@Test
 	public void roundtripTest() throws InterruptedException, ExecutionException {
-		JMSResponseUpdater<String> updater = new JMSResponseUpdater<String>(ag, context, ac.futures) {
+		JMSResponseUpdater<String> updater = new JMSResponseUpdater<String>(context, ac.futures) {
 			@Override
 			public String act(Message answer) {
 				try {
@@ -131,6 +131,7 @@ public class JMSMailboxTest {
 				}
 			}
 		};
+		ag.register(updater);
 		Future<String> resp = ac.send("hello", true);
 		Util.sleep(200);
 		Assert.assertTrue("Response should arrive", resp.isDone());

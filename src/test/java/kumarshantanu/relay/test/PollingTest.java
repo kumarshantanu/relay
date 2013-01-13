@@ -19,7 +19,7 @@ public class PollingTest {
 		DefaultAgent ag = new DefaultAgent(threadPool);
 		final AtomicBoolean pollState = new AtomicBoolean(false);
 		final AtomicBoolean executeRan = new AtomicBoolean(false);
-		PollingActor<String> actor = new PollingActor<String>(ag) {
+		PollingActor<String> actor = new PollingActor<String>() {
 			@Override
 			public boolean poll() {
 				return pollState.get();
@@ -30,6 +30,7 @@ public class PollingTest {
 				return "foo";
 			}
 		};
+		ag.register(actor);
 		threadPool.execute(ag);
 		Assert.assertFalse("poll() should return false", actor.poll());
 		Assert.assertFalse("executeRan should return false", executeRan.get());

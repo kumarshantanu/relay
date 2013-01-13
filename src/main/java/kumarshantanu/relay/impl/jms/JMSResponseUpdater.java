@@ -7,7 +7,6 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 
 import kumarshantanu.relay.ActorID;
-import kumarshantanu.relay.Agent;
 import kumarshantanu.relay.MailboxException;
 import kumarshantanu.relay.impl.AbstractActor;
 import kumarshantanu.relay.impl.ResponseFuture;
@@ -23,14 +22,12 @@ public abstract class JMSResponseUpdater<ReturnType> extends AbstractActor<Messa
 
 	public final JMSContext context;
 
-	public JMSResponseUpdater(Agent agent, JMSContext context,
+	public JMSResponseUpdater(JMSContext context,
 			Map<String, ResponseFuture<ReturnType>> futures) {
 		super(null, null, futures);
-		Util.notNull(agent, "agent");
 		Util.notNull(futures, "futures");
 		Util.notNull(context, "context");
 		this.context = context;
-		agent.register(this);
 	}
 
 	public Runnable poll(ActorID actorID) {
