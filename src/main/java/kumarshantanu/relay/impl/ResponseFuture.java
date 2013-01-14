@@ -38,7 +38,10 @@ public class ResponseFuture<ReturnType> implements Future<ReturnType> {
 
 	public ReturnType get() throws InterruptedException, ExecutionException {
 		while (!done) {
-			Util.sleep(200);
+			Thread.sleep(200); // may throw InterruptedException
+		}
+		if (cancelled) {
+			throw new ExecutionException(error);
 		}
 		return value;
 	}
@@ -47,8 +50,11 @@ public class ResponseFuture<ReturnType> implements Future<ReturnType> {
 			throws InterruptedException, ExecutionException, TimeoutException {
 		long start = System.nanoTime();
 		while (!done) {
-			Util.sleep(Math.min(200, unit.toMillis(timeout)));
+			Thread.sleep(Math.min(200, unit.toMillis(timeout))); // may throw InterruptedException
 			if (unit.toNanos(timeout) >= (System.nanoTime() - start)) break;
+		}
+		if (cancelled) {
+			throw new ExecutionException(error);
 		}
 		if (done) {
 			return value;
