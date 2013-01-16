@@ -88,12 +88,8 @@ public class JMSMailboxTest {
 		final Destination destination = session.createQueue(queueName);
 		final MessageProducer producer = session.createProducer(destination);
 		final MessageConsumer consumer = session.createConsumer(destination);
-		final Destination replyTo = session.createTemporaryQueue();
-		final MessageConsumer replyToConsumer = session.createConsumer(replyTo);
 		return new JMSContext() {
 			public void onException(JMSException e) { e.printStackTrace(); }
-			public Destination getReplyToDestination() { return replyTo; }
-			public MessageConsumer getReplyToConsumer() { return replyToConsumer; }
 			public Session getSession() { return session; }
 			public void commit() {}
 			public void rollback() {}
