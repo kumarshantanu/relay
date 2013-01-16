@@ -1,8 +1,6 @@
 package kumarshantanu.relay.test;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.jms.Destination;
@@ -16,13 +14,12 @@ import javax.jms.TextMessage;
 import kumarshantanu.relay.MailboxException;
 import kumarshantanu.relay.impl.AbstractActor;
 import kumarshantanu.relay.impl.DefaultAgent;
+import kumarshantanu.relay.impl.GenericActor;
 import kumarshantanu.relay.impl.Util;
-import kumarshantanu.relay.impl.jms.JMSActor;
 import kumarshantanu.relay.impl.jms.JMSContext;
 import kumarshantanu.relay.impl.jms.JMSMailbox;
 import kumarshantanu.relay.impl.jms.JMSMessageSerializer;
 import kumarshantanu.relay.impl.jms.JMSPollConverter;
-import kumarshantanu.relay.impl.jms.JMSResponseUpdater;
 import kumarshantanu.relay.monitoring.ThroughputAware;
 
 import org.junit.AfterClass;
@@ -41,7 +38,7 @@ public class JMSMailboxTest {
 	private static JMSMailbox<String> mailbox;
 	private static JMSPollConverter<String> pollConverter;
 	private static AtomicLong counter;
-	private static AbstractActor<String, String> ac;
+	private static AbstractActor<String> ac;
 	private static Runnable sender;
 
 	@BeforeClass
@@ -62,11 +59,9 @@ public class JMSMailboxTest {
 		mailbox = new JMSMailbox<String>(context, serde);
 		pollConverter = new JMSPollConverter<String>(context, serde);
 		counter = new AtomicLong();
-		ac = new JMSActor<String, String>(context, mailbox, pollConverter, serde) {
-			@Override
-			public String act(String req) {
+		ac = new GenericActor<String, Message>(mailbox, pollConverter) {
+			public void act(String req) {
 				counter.incrementAndGet();
-				return req;
 			}
 		};
 		ag.register(ac);
@@ -116,29 +111,6 @@ public class JMSMailboxTest {
 		System.out.println(((ThroughputAware) ac).getThroughputString());
 		Util.sleep(200);
 		Assert.assertTrue("Test finished", true);
-	}
-
-	@Test
-	public void roundtripTest() throws InterruptedException, ExecutionException {
-		JMSResponseUpdater<String> updater = new JMSResponseUpdater<String>(context, ac.futures) {
-			@Override
-			public String act(Message answer) {
-				try {
-					return ((TextMessage) answer).getText();
-				} catch (JMSException e) {
-					e.printStackTrace();
-					throw new RuntimeException(e);
-				}
-			}
-		};
-		ag.register(updater);
-		Future<String> resp = ac.send("hello", true);
-		Util.sleep(200);
-		Assert.assertTrue("Response should arrive", resp.isDone());
-		Assert.assertEquals("hello", resp.get());
-		ag.unregister(updater);
-		Util.sleep(200);
-		System.out.println("Unregistered actor: " + updater.getActorID().getActorName());
 	}
 
 }

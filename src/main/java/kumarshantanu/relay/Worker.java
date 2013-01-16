@@ -7,7 +7,7 @@ package kumarshantanu.relay;
  * @param <RequestType>
  * @param <ReturnType>
  */
-public interface Worker<RequestType, ReturnType> {
+public interface Worker<RequestType> {
 
 	/**
 	 * Return true if the work is idempotent, false otherwise.
@@ -20,6 +20,6 @@ public interface Worker<RequestType, ReturnType> {
 	 * @param req
 	 * @return
 	 */
-	public ReturnType act(RequestType req);
+	public void act(RequestType req);
 	
 }

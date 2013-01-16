@@ -19,15 +19,13 @@ public class PollingTest {
 		DefaultAgent ag = new DefaultAgent(threadPool);
 		final AtomicBoolean pollState = new AtomicBoolean(false);
 		final AtomicBoolean executeRan = new AtomicBoolean(false);
-		PollingActor<String> actor = new PollingActor<String>() {
+		PollingActor actor = new PollingActor() {
 			@Override
 			public boolean poll() {
 				return pollState.get();
 			}
-			@Override
-			public String act(Object req) {
+			public void act(Object req) {
 				executeRan.set(true);
-				return "foo";
 			}
 		};
 		ag.register(actor);

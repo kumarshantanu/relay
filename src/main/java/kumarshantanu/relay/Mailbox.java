@@ -20,12 +20,10 @@ public interface Mailbox<RequestType, PollType> {
 	/**
 	 * Add message to the mailbox.
 	 * @param message message to be added to mailbox
-	 * @param actorID ActorID instance the message is associated with
-	 * @param correlationID the message correlation ID (for 2-way communication)
 	 * @throws MailboxException
 	 * @see poll
 	 */
-	public void add(RequestType message, ActorID actorID, String correlationID) throws MailboxException;
+	public void add(RequestType message) throws MailboxException;
 
 	/**
 	 * Cancel a message and return true if message was cancelled, false
@@ -34,6 +32,6 @@ public interface Mailbox<RequestType, PollType> {
 	 * @param message
 	 * @return
 	 */
-	public boolean cancel(RequestType message, ActorID actorID) throws MailboxException;
+	public boolean cancel(RequestType message) throws MailboxException;
 
 }

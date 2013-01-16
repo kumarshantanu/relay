@@ -15,14 +15,13 @@ import org.junit.Test;
 
 public class BatchTest {
 
-	private class BatchProcessor implements Worker<List<String>, Object> {
+	private class BatchProcessor implements Worker<List<String>> {
 		public final AtomicInteger count;
 		public BatchProcessor(AtomicInteger count) {
 			this.count = count;
 		}
-		public Object act(List<String> value) {
+		public void act(List<String> value) {
 			count.addAndGet(value.size());
-			return null;
 		}
 		public boolean isIdempotent() {
 			return false;

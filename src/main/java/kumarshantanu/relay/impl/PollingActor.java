@@ -1,7 +1,5 @@
 package kumarshantanu.relay.impl;
 
-import java.util.concurrent.Future;
-
 import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.MailboxException;
 
@@ -14,7 +12,7 @@ import kumarshantanu.relay.MailboxException;
  *
  * @param <ReturnType>
  */
-public abstract class PollingActor<ReturnType> extends AbstractActor<Object, ReturnType> {
+public abstract class PollingActor extends AbstractActor<Object> {
 
 	public PollingActor(String actorName, ActorID parentActor) {
 		super(parentActor, actorName);
@@ -36,7 +34,11 @@ public abstract class PollingActor<ReturnType> extends AbstractActor<Object, Ret
 		public void run() {
 			CURRENT_ACTOR_ID.set(actorID);
 			tvcKeeper.incrementBy(1);
-			act(null);
+			try {
+				act(null);
+			} catch(Throwable error) {
+				onFailure(error);
+			}
 		}
 	}
 
@@ -50,11 +52,6 @@ public abstract class PollingActor<ReturnType> extends AbstractActor<Object, Ret
 	}
 
 	public void send(Object message) throws MailboxException {
-		throw new IllegalStateException("send is not supported on this actor");
-	}
-
-	public Future<ReturnType> send(Object message, boolean returnFuture)
-			throws MailboxException {
 		throw new IllegalStateException("send is not supported on this actor");
 	}
 

@@ -4,9 +4,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.Semaphore;
 
-import kumarshantanu.relay.ActorID;
-import kumarshantanu.relay.CorrelatedMessage;
-
 /**
  * Default unbounded local mailbox. Note that this implementation stores object
  * references; hence it is not space efficient for storing primitives.
@@ -14,34 +11,31 @@ import kumarshantanu.relay.CorrelatedMessage;
  *
  * @param <RequestType>
  */
-public class DefaultMailbox<RequestType>
-extends AbstractMailbox<RequestType, CorrelatedMessage<RequestType>> {
+public class DefaultMailbox<RequestType> extends AbstractMailbox<RequestType, RequestType> {
 	
 	protected final Semaphore sem = new Semaphore(1);
 
-	protected final Queue<CorrelatedMessage<RequestType>> queue;
+	protected final Queue<RequestType> queue;
 
 
-	public DefaultMailbox(Queue<CorrelatedMessage<RequestType>> queue) {
+	public DefaultMailbox(Queue<RequestType> queue) {
 		this.queue = queue;
 	}
 
 	public DefaultMailbox() {
-		this(new LinkedList<CorrelatedMessage<RequestType>>());
+		this(new LinkedList<RequestType>());
 	}
 
-	public void add(RequestType message, ActorID actorID, String correlationID) {
+	public void add(RequestType message) {
 		sem.acquireUninterruptibly();
 		try {
-			CorrelatedMessage<RequestType> element =
-					new CorrelatedMessage<RequestType>(message, correlationID);
-			queue.add(element);
+			queue.add(message);
 		} finally {
 			sem.release();
 		}
 	}
 	
-	public CorrelatedMessage<RequestType> poll() {
+	public RequestType poll() {
 		sem.acquireUninterruptibly();
 		try {
 			return queue.poll();
@@ -50,7 +44,7 @@ extends AbstractMailbox<RequestType, CorrelatedMessage<RequestType>> {
 		}
 	}
 
-	public boolean cancel(RequestType message, ActorID actorID) {
+	public boolean cancel(RequestType message) {
 		return false;
 	}
 

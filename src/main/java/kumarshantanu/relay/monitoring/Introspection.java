@@ -11,9 +11,9 @@ public class Introspection {
 	public static List<AgentInfo> takeSnapshot() {
 		List<AgentInfo> agentInfo = new ArrayList<AgentInfo>();
 		for (Agent ag: Agent.ALL_AGENTS) {
-			Iterable<Actor<?, ?>> actors = ag.listActors();
+			Iterable<Actor<?>> actors = ag.listActors();
 			List<ActorInfo> actorInfo = new ArrayList<ActorInfo>();
-			for (Actor<?, ?> each: actors) {
+			for (Actor<?> each: actors) {
 				actorInfo.add(new ActorInfo(each));
 			}
 			agentInfo.add(new AgentInfo(actorInfo));

@@ -16,18 +16,16 @@ import org.junit.Test;
 public class SimpleTest {
 	
 	private interface ActorFactory {
-		public Actor<String, String> create(AtomicLong counter);
+		public Actor<String> create(AtomicLong counter);
 	}
 	
 	@Test
 	public void defaultActorTest() {
 		test(new ActorFactory() {
-			public Actor<String, String> create(final AtomicLong counter) {
-				return new DefaultActor<String, String>() {
-					@Override
-					public String act(String req) {
+			public Actor<String> create(final AtomicLong counter) {
+				return new DefaultActor<String>() {
+					public void act(String req) {
 						counter.incrementAndGet();
-						return req;
 					}
 				};
 			}
@@ -39,7 +37,7 @@ public class SimpleTest {
 		final AtomicLong counter = new AtomicLong();
 		ExecutorService threadPool = Util.newThreadPool();
 		DefaultAgent ag = new DefaultAgent(threadPool);
-		final Actor<String, String> ac = afactory.create(counter);
+		final Actor<String> ac = afactory.create(counter);
 		ag.register(ac);
 		Runnable sender = new Runnable() {
 			public void run() {

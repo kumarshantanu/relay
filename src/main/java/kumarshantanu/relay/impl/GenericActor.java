@@ -1,12 +1,10 @@
 package kumarshantanu.relay.impl;
 
-import java.util.concurrent.Future;
-
 import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.MailboxException;
 
-public abstract class GenericActor<RequestType, PollType, ReturnType>
-extends AbstractActor<RequestType, ReturnType> {
+public abstract class GenericActor<RequestType, PollType>
+extends AbstractActor<RequestType> {
 
 	public final AbstractMailbox<RequestType, PollType> mailbox;
 	public final PollConverter<RequestType, PollType> pollConverter;
@@ -32,9 +30,6 @@ extends AbstractActor<RequestType, ReturnType> {
 
 	// ----- internal stuff -----
 
-	protected abstract void onSuccess(PollType poll, ReturnType val);
-	protected abstract void onFailure(PollType poll, Throwable err);
-
 	private class Job implements Runnable {
 		public final PollType message;
 		public final ActorID actorID;
@@ -46,10 +41,9 @@ extends AbstractActor<RequestType, ReturnType> {
 			CURRENT_ACTOR_ID.set(actorID);
 			tvcKeeper.incrementBy(1);
 			try {
-				ReturnType val = act(pollConverter.getMessage(message));
-				onSuccess(message, val);
+				act(pollConverter.getMessage(message));
 			} catch(Throwable t) {
-				onFailure(message, t);
+				onFailure(t);
 			}
 		}
 	}
@@ -65,21 +59,7 @@ extends AbstractActor<RequestType, ReturnType> {
 	}
 
 	public void send(RequestType message) throws MailboxException {
-		send(message, false);
-	}
-
-	public Future<ReturnType> send(RequestType message, boolean returnFuture) throws MailboxException {
-		if (returnFuture == false) {
-			mailbox.add(message, currentActorID, null);
-			return null;
-		}
-		String corID = returnFuture? mailbox.nextCorrelationID(currentActorID): null;
-		mailbox.add(message, currentActorID, corID);
-		ResponseFuture<ReturnType> future = new ResponseFuture<ReturnType>();
-		if (returnFuture) {
-			futures.put(corID, future);
-		}
-		return future;
+		mailbox.add(message);
 	}
 
 }

@@ -1,7 +1,5 @@
 package kumarshantanu.relay;
 
-import java.util.concurrent.Future;
-
 import kumarshantanu.relay.lifecycle.LifecycleAware;
 
 
@@ -13,7 +11,7 @@ import kumarshantanu.relay.lifecycle.LifecycleAware;
  * @param <RequestType>
  * @param <ReturnType>
  */
-public interface Actor<RequestType, ReturnType> extends Worker<RequestType, ReturnType>, LifecycleAware {
+public interface Actor<RequestType> extends Worker<RequestType>, LifecycleAware {
 
 	public static final ThreadLocal<ActorID> CURRENT_ACTOR_ID =
 			new ThreadLocal<ActorID>();
@@ -41,20 +39,5 @@ public interface Actor<RequestType, ReturnType> extends Worker<RequestType, Retu
 	 * @throws MailboxException
 	 */
 	public void send(RequestType message) throws MailboxException;
-
-	/**
-	 * Send a message to the mailbox of the actor. The message is queued until
-	 * it is processed by an agent the actor is registered with. What happens
-	 * to the result of processing is implementation dependent.
-	 * Returns a Future<ReturnType> when <tt>returnFuture</tt> is true, null
-	 * otherwise. Note that returning a Future<ReturnType> may increase memory
-	 * footprint of the message.
-	 * @param message
-	 * @param returnFuture
-	 * @return
-	 * @throws MailboxException
-	 */
-	public Future<ReturnType> send(RequestType message, boolean returnFuture)
-			throws MailboxException;
 
 }

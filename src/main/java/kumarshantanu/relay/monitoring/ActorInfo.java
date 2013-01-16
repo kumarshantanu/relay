@@ -10,7 +10,7 @@ public class ActorInfo {
 	public final long durMillis;
 	public final String durName;
 
-	public ActorInfo(Actor<?, ?> actor) {
+	public ActorInfo(Actor<?> actor) {
 		actorID = actor.getActorID();
 		if (actor instanceof ThroughputAware) {
 			ThroughputAware t = (ThroughputAware) actor;

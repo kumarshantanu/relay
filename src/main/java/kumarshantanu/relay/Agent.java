@@ -18,14 +18,14 @@ public interface Agent extends Runnable, LifecycleAware {
 	 * actors only.
 	 * @param actor
 	 */
-	public void register(Actor<?, ?> actor);
+	public void register(Actor<?> actor);
 
 	/**
 	 * Unregister actor from the agent, and stop processing its mailbox
 	 * messages.
 	 * @param actor
 	 */
-	public void unregister(Actor<?, ?> actor);
+	public void unregister(Actor<?> actor);
 
 	/**
 	 * Given the actor name find the actor instance and return it. Return null
@@ -33,12 +33,12 @@ public interface Agent extends Runnable, LifecycleAware {
 	 * @param name
 	 * @return
 	 */
-	public Actor<?, ?> findActor(String name);
+	public Actor<?> findActor(String name);
 
 	/**
 	 * Return a list of all registered actors.
 	 * @return
 	 */
-	public Iterable<Actor<?, ?>> listActors();
+	public Iterable<Actor<?>> listActors();
 
 }

@@ -12,8 +12,8 @@ public abstract class AbstractAgent extends AbstractLifecycleAware implements Ag
 
 	private static final AtomicCounter COUNTER = new AtomicCounter();
 
-	public final Map<String, Actor<?, ?>> ACTORS =
-			new ConcurrentHashMap<String, Actor<?, ?>>();
+	public final Map<String, Actor<?>> ACTORS =
+			new ConcurrentHashMap<String, Actor<?>>();
 
 	public AbstractAgent(String name) {
 		super(name==null? "Agent_" + COUNTER.incrementAndGet(): name);
@@ -21,23 +21,23 @@ public abstract class AbstractAgent extends AbstractLifecycleAware implements Ag
 
 	// ----- Agent methods -----
 	
-	public void register(Actor<?, ?> actor) {
+	public void register(Actor<?> actor) {
 		Util.notNull(actor, "actor");
 		ACTORS.put(actor.getActorID().getActorName(), actor);
 	}
 	
-	public void unregister(Actor<?, ?> actor) {
+	public void unregister(Actor<?> actor) {
 		Util.notNull(actor, "actor");
 		ACTORS.remove(actor.getActorID().getActorName());
 	}
 	
-	public Actor<?, ?> findActor(String name) {
+	public Actor<?> findActor(String name) {
 		Util.notNull(name, "name");
 		return ACTORS.get(name);
 	}
 
-	public Iterable<Actor<?, ?>> listActors() {
-		return new ArrayList<Actor<?, ?>>(ACTORS.values());
+	public Iterable<Actor<?>> listActors() {
+		return new ArrayList<Actor<?>>(ACTORS.values());
 	}
 
 }

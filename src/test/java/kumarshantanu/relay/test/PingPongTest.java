@@ -50,13 +50,12 @@ public class PingPongTest {
 		ag.stop();
 	}
 
-	public class PingActor extends DefaultActor<String, Object> {
+	public class PingActor extends DefaultActor<String> {
 		private PongActor pong = null;
 		public void setPong(PongActor pong) {
 			this.pong = pong;
 		}
-		@Override
-		public Object act(String req) {
+		public void act(String req) {
 			try {
 				long val = counter.incrementAndGet();
 				if (val < MAX_COUNT) {
@@ -65,23 +64,20 @@ public class PingPongTest {
 			} catch (MailboxException e) {
 				e.printStackTrace();
 			}
-			return null;
 		}
 	}
 
-	public class PongActor extends DefaultActor<String, Object> {
+	public class PongActor extends DefaultActor<String> {
 		private PingActor ping = null;
 		public void setPing(PingActor ping) {
 			this.ping = ping;
 		}
-		@Override
-		public Object act(String req) {
+		public void act(String req) {
 			try {
 				ping.send("pong");
 			} catch (MailboxException e) {
 				e.printStackTrace();
 			}
-			return null;
 		}
 	}
 

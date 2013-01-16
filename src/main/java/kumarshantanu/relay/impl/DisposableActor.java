@@ -4,20 +4,20 @@ import kumarshantanu.relay.Actor;
 import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.Agent;
 
-public class DisposableActor<RequestType, ReturnType> extends AbstractActorDecorator<RequestType, ReturnType> {
+public class DisposableActor<RequestType> extends AbstractActorDecorator<RequestType> {
 
 	private final Agent agent;
 
 	private volatile boolean disposable = false;
 
-	public DisposableActor(Actor<RequestType, ReturnType> orig, Agent agent,
+	public DisposableActor(Actor<RequestType> orig, Agent agent,
 			boolean disposable) {
 		super(orig);
 		this.agent = agent;
 		this.disposable = disposable;
 	}
 
-	public DisposableActor(Actor<RequestType, ReturnType> orig, Agent agent) {
+	public DisposableActor(Actor<RequestType> orig, Agent agent) {
 		this(orig, agent, true);
 	}
 

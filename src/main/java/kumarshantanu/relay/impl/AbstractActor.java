@@ -1,8 +1,5 @@
 package kumarshantanu.relay.impl;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import kumarshantanu.relay.Actor;
 import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.lifecycle.AbstractLifecycleAware;
@@ -10,9 +7,9 @@ import kumarshantanu.relay.lifecycle.LifecycleState.LifecycleStateEnum;
 import kumarshantanu.relay.monitoring.ThroughputAware;
 import kumarshantanu.relay.monitoring.TimeVersusCountKeeper;
 
-public abstract class AbstractActor<RequestType, ReturnType>
+public abstract class AbstractActor<RequestType>
 extends AbstractLifecycleAware
-implements Actor<RequestType, ReturnType>, ThroughputAware {
+implements Actor<RequestType>, ThroughputAware {
 
 	private static final AtomicCounter COUNTER = new AtomicCounter();
 
@@ -20,11 +17,9 @@ implements Actor<RequestType, ReturnType>, ThroughputAware {
 
 	public final ActorID currentActorID;
 	public final ActorID parentActorID;
-	public final Map<String, ResponseFuture<ReturnType>> futures;
 
 
-	public AbstractActor(ActorID parentActorId, String actorName,
-			Map<String, ResponseFuture<ReturnType>> futures) {
+	public AbstractActor(ActorID parentActorId, String actorName) {
 		super(actorName);
 		this.parentActorID = parentActorId;
 		if (actorName == null) {
@@ -32,16 +27,7 @@ implements Actor<RequestType, ReturnType>, ThroughputAware {
 		} else {
 			this.currentActorID = new ActorID(actorName);
 		}
-		if (futures == null) {
-			this.futures = new ConcurrentHashMap<String, ResponseFuture<ReturnType>>();
-		} else {
-			this.futures = futures;
-		}
 		setState(LifecycleStateEnum.RUNNING);
-	}
-
-	public AbstractActor(ActorID parentActorId, String actorName) {
-		this(parentActorId, actorName, null);
 	}
 
 	protected static String getDefaultName() {
@@ -57,31 +43,13 @@ implements Actor<RequestType, ReturnType>, ThroughputAware {
 		// do nothing, because actors are not instances of Runnable
 	}
 
-	// ----- helper methods -----
-
-	protected void correlateSuccess(String correlationID, ReturnType val) {
-		if (correlationID!=null) {
-			ResponseFuture<ReturnType> future = futures.remove(correlationID);
-			if (future!=null) {
-				future.finalizeDone(val);
-			}
-		}
-	}
-
-	protected void correlateFailure(String correlationID, Throwable err) {
-		if (correlationID!=null) {
-			ResponseFuture<ReturnType> future = futures.remove(correlationID);
-			if (future!=null) {
-				future.finalizeCancel(err);
-			}
-		}
+	protected void onFailure(Throwable error) {
+		error.printStackTrace();
 	}
 
 	// ----- Worker methods (dummy implementation) -----
 
 	public boolean isIdempotent() { return false; }
-
-	public abstract ReturnType act(RequestType req);
 
 	// ----- ThroughputAware implementation -----
 

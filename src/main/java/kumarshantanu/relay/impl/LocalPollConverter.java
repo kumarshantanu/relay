@@ -1,17 +1,15 @@
 package kumarshantanu.relay.impl;
 
-import kumarshantanu.relay.CorrelatedMessage;
 
-public class LocalPollConverter<RequestType>
-implements PollConverter<RequestType, CorrelatedMessage<RequestType>> {
+public class LocalPollConverter<RequestType> implements PollConverter<RequestType, RequestType> {
 
-	public RequestType getMessage(CorrelatedMessage<RequestType> encoded) {
-		return encoded.message;
+	public RequestType getMessage(RequestType message) {
+		return message;
 	}
 
-	public String getCorrelationID(
-			CorrelatedMessage<RequestType> encoded) {
-		return encoded.correlationID;
+	public String getCorrelationID(RequestType message) {
+		throw new UnsupportedOperationException(
+				"Correlation-ID not supported on this poll-converter");
 	}
 
 }

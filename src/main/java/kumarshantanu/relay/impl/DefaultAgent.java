@@ -51,7 +51,7 @@ public class DefaultAgent extends AbstractAgent {
 					toSleep = true;
 					break;
 				}
-				Actor<?, ?> a = findActor(name);
+				Actor<?> a = findActor(name);
 				if (a != null && a.getState() == LifecycleStateEnum.RUNNING) {
 					Runnable r = a.poll(a.getActorID());
 					if (r != null) {

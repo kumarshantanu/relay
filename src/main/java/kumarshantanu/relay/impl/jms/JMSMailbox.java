@@ -3,7 +3,6 @@ package kumarshantanu.relay.impl.jms;
 import javax.jms.JMSException;
 import javax.jms.Message;
 
-import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.MailboxException;
 import kumarshantanu.relay.impl.AbstractMailbox;
 import kumarshantanu.relay.impl.Util;
@@ -26,15 +25,15 @@ public class JMSMailbox<RequestType> extends AbstractMailbox<RequestType, Messag
 		this.serde = serde;
 	}
 
+	protected Message preProcess(RequestType message, Message jmsMessage) {
+		return jmsMessage;
+	}
+
 	// ----- Mailbox methods -----
 
-	public void add(RequestType message, ActorID actorID, String correlationID) throws MailboxException {
+	public void add(RequestType message) throws MailboxException {
 		try {
-			Message msg = serde.serialize(message);
-			if (correlationID != null) {
-				msg.setJMSReplyTo(context.getReplyToDestination());
-				msg.setJMSCorrelationID(correlationID);
-			}
+			Message msg = preProcess(message, serde.serialize(message));
 			context.getProducer().send(msg);
 			context.commit();
 		} catch (JMSException e) {
@@ -44,8 +43,8 @@ public class JMSMailbox<RequestType> extends AbstractMailbox<RequestType, Messag
 		}
 	}
 
-	public boolean cancel(RequestType message, ActorID actorID) {
-		throw new MailboxException(this, "cancel is not supported on JmsMailbox");
+	public boolean cancel(RequestType message) {
+		throw new MailboxException(this, "cancel is not supported on this mailbox");
 	}
 
 	public Message poll() throws MailboxException {
