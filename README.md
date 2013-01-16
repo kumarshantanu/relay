@@ -28,25 +28,21 @@ Instantiate actors; send messages to them:
 ExecutorService threadPool = Util.newThreadPool(); // instantiate a thread-pool
 DefaultAgent ag = new DefaultAgent(threadPool);    // instantiate an agent
 final DefaultActor<String, String> actorB = new DefaultActor<String, String>() {
-    @Override
-    public String act(String req) {
+    public void act(String req) {
         String ret = "Received message: " + req;
         System.out.println(ret);
-        return ret;     // actual processing here
     }
 };                      // instantiate actor B
 DefaultActor<String, String> actorA = new DefaultActor<String, String>() {
-    @Override
-    public String act(String req) {
+    public void act(String req) {
         String ret = "Forwarding message: " + req;
         actorB.send(ret);
         System.out.println(ret);
-        return ret;     // actual processing here
     }
 };                      // instantiate actor A
 ag.register(actorA);
 ag.register(actorB);
-threadPool.execute(ag); // start the agent (same thread-pool not necessary)
+threadPool.execute(ag); // start the agent (same thread-pool not mandatory)
 actor.send("foo");      // send message to the actor
 ```
 

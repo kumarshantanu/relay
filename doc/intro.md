@@ -5,7 +5,7 @@ TODO: write [great documentation](http://jacobian.org/writing/great-documentatio
 
 ## Overview
 
-Relay is an Java actor model implementation for setting up data-processing
+Relay is a Java actor model implementation for setting up data-processing
 pipeline. _Messages_ are always passed asynchronously to the _actors_ and
 orchestrated by an _agent_. You can specify the thread-pool for use by an
 agent.
@@ -27,17 +27,21 @@ sleeps when idling in order to free the CPU resources.
 
 The following _Actor_ implementations are provided:
 
-* DefaultActor - the standard actor implementation for use in most cases
-* BatchActor - Batches up the mailbox messages on threshold; processes in bulk
+* GenericActor - the standard actor that may use a local or a remote mailbox
+* DefaultActor - actor implementation with local mailbox for use in most cases
+* BatchActor   - batches up the mailbox messages on threshold; processes in bulk
 * PollingActor - used to poll some state (instead of mailbox) for readiness
-* JMSActor - Uses JMSMailbox to send messages, typically in distributed fashion
+* DisposableActor - ephemeral actors with discreet number of messages in mailbox
 
 
 ## Mailbox
 
-1. `Mailbox` is an interface, and the default implementation is in-memory queue.
-2. For distributed pipelines you may like to implement Mailbox using RabbitMQ,
-   HornetQ, Beanstalkd etc.
+`Mailbox` is an interface, and the default implementation is an in-memory queue
+called `DefaultMailbox`. For distributed pipelines you may like to implement
+Mailbox using RabbitMQ, HornetQ, Beanstalkd etc.
+
+* DefaultMailbox - based on local, in-memory queue
+* JMSMailbox     - based on JMS queue or topic
 
 
 ## Lifecycle support:
