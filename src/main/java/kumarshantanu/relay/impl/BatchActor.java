@@ -45,8 +45,8 @@ public class BatchActor<RequestType> extends AbstractActor<RequestType> {
 			tvcKeeper.incrementBy(messages.size());
 			try {
 				worker.act(messages);
-			} catch(Throwable err) {
-				onFailure(err);
+			} catch(Throwable error) {
+				onFailure(error);
 			}
 		}
 	}

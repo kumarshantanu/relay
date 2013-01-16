@@ -3,8 +3,7 @@ package kumarshantanu.relay.impl;
 import kumarshantanu.relay.ActorID;
 import kumarshantanu.relay.MailboxException;
 
-public abstract class GenericActor<RequestType, PollType>
-extends AbstractActor<RequestType> {
+public abstract class GenericActor<RequestType, PollType> extends AbstractActor<RequestType> {
 
 	public final AbstractMailbox<RequestType, PollType> mailbox;
 	public final PollConverter<RequestType, PollType> pollConverter;
@@ -42,8 +41,8 @@ extends AbstractActor<RequestType> {
 			tvcKeeper.incrementBy(1);
 			try {
 				act(pollConverter.getMessage(message));
-			} catch(Throwable t) {
-				onFailure(t);
+			} catch(Throwable error) {
+				onFailure(error);
 			}
 		}
 	}
