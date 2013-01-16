@@ -12,8 +12,8 @@ public abstract class GenericActor<RequestType, PollType> extends AbstractActor<
 			PollConverter<RequestType, PollType> pollConverter,
 			String actorName, ActorID parentActor) {
 		super(parentActor, actorName);
-		Util.notNull(mailbox, "mailbox");
-		Util.notNull(pollConverter, "pollConverter");
+		Util.assertNotNull(mailbox, "mailbox");
+		Util.assertNotNull(pollConverter, "pollConverter");
 		this.mailbox = mailbox;
 		this.pollConverter = pollConverter;
 	}

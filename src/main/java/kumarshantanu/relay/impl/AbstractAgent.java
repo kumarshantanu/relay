@@ -22,17 +22,17 @@ public abstract class AbstractAgent extends AbstractLifecycleAware implements Ag
 	// ----- Agent methods -----
 	
 	public void register(Actor<?> actor) {
-		Util.notNull(actor, "actor");
+		Util.assertNotNull(actor, "actor");
 		ACTORS.put(actor.getActorID().getActorName(), actor);
 	}
 	
 	public void unregister(Actor<?> actor) {
-		Util.notNull(actor, "actor");
+		Util.assertNotNull(actor, "actor");
 		ACTORS.remove(actor.getActorID().getActorName());
 	}
 	
 	public Actor<?> findActor(String name) {
-		Util.notNull(name, "name");
+		Util.assertNotNull(name, "name");
 		return ACTORS.get(name);
 	}
 

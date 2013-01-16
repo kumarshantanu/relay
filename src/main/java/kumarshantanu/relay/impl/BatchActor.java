@@ -19,7 +19,7 @@ public class BatchActor<RequestType> extends AbstractActor<RequestType> {
 		super(null, null);
 		this.maxBatchSize = maxBatchSize;
 		this.flushMillis = flushMillis;
-		Util.notNull(worker, "worker");
+		Util.assertNotNull(worker, "worker");
 		this.worker = worker;
 	}
 

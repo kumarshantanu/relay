@@ -12,8 +12,8 @@ public class JMSPollConverter<RequestType> implements PollConverter<RequestType,
 	public final JMSMessageSerializer<RequestType> serde;
 
 	public JMSPollConverter(JMSContext context, JMSMessageSerializer<RequestType> serde) {
-		Util.notNull(context, "context");
-		Util.notNull(serde, "serde");
+		Util.assertNotNull(context, "context");
+		Util.assertNotNull(serde, "serde");
 		this.context = context;
 		this.serde = serde;
 	}

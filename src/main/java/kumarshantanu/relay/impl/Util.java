@@ -13,21 +13,11 @@ public class Util {
 	public static final String JVM_ID = UUID.randomUUID().toString();
 	
 	
-	public static <T> void notNull(T x, String name) {
+	public static <T> void assertNotNull(T x, String name) {
 		if (x == null) {
 			throw new IllegalArgumentException("Expected "
 					+ name + " but found null");
 		}
-	}
-
-	public static void positiveInteger(int x) {
-		if (x <= 0) throw new IllegalArgumentException(
-				"Expected positive integer but found " + x);
-	}
-
-	public static void positiveLong(long x) {
-		if (x <= 0) throw new IllegalArgumentException(
-				"Expected positive long but found " + x);
 	}
 
 	// optimum for CPU-bound jobs only
@@ -53,7 +43,7 @@ public class Util {
 
 	public static <RequestType, ReturnType>
 	Mailbox<RequestType, RequestType> createMailbox(final Queue<RequestType> queue) {
-		notNull(queue, "queue");
+		assertNotNull(queue, "queue");
 		return new Mailbox<RequestType, RequestType>() {
 			public void add(RequestType message) throws MailboxException {
 				try {

@@ -19,8 +19,8 @@ public class JMSMailbox<RequestType> extends AbstractMailbox<RequestType, Messag
 	public final JMSMessageSerializer<RequestType> serde;
 
 	public JMSMailbox(JMSContext context, JMSMessageSerializer<RequestType> serde) {
-		Util.notNull(context, "context");
-		Util.notNull(serde, "serde");
+		Util.assertNotNull(context, "context");
+		Util.assertNotNull(serde, "serde");
 		this.context = context;
 		this.serde = serde;
 	}
