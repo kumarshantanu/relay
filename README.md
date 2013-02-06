@@ -43,7 +43,7 @@ DefaultActor<String, String> actorA = new DefaultActor<String, String>() {
 ag.register(actorA);
 ag.register(actorB);
 threadPool.execute(ag); // start the agent (same thread-pool not mandatory)
-actor.send("foo");      // send message to the actor
+actorA.send("foo");     // send message to the actor
 ```
 
 ### Documentation
