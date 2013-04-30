@@ -16,7 +16,7 @@ public class PollingTest {
 	public void test() {
 		Assert.assertTrue("Test started", true);
 		ExecutorService threadPool = Util.newThreadPool();
-		DefaultAgent ag = new DefaultAgent(threadPool);
+		DefaultAgent ag = new DefaultAgent(threadPool, Util.optimumThreadCount());
 		final AtomicBoolean pollState = new AtomicBoolean(false);
 		final AtomicBoolean executeRan = new AtomicBoolean(false);
 		PollingActor actor = new PollingActor() {

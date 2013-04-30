@@ -36,7 +36,7 @@ public class SimpleTest {
 		Assert.assertTrue("Test started", true);
 		final AtomicLong counter = new AtomicLong();
 		ExecutorService threadPool = Util.newThreadPool();
-		DefaultAgent ag = new DefaultAgent(threadPool);
+		DefaultAgent ag = new DefaultAgent(threadPool, Util.optimumThreadCount());
 		final Actor<String> ac = afactory.create(counter);
 		ag.register(ac);
 		Runnable sender = new Runnable() {

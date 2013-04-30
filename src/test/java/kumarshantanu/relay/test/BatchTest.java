@@ -40,7 +40,7 @@ public class BatchTest {
 	public void test() {
 		Assert.assertTrue("Test started", true);
 		ExecutorService threadPool = Util.newThreadPool();
-		DefaultAgent ag = new DefaultAgent(threadPool);
+		DefaultAgent ag = new DefaultAgent(threadPool, Util.optimumThreadCount());
 		final AtomicInteger count = new AtomicInteger(0);
 		BatchProcessor batchProcessor = new BatchProcessor(count);
 		BatchActor<String> actor = new BatchActor<String>(batchProcessor, 5, 500);

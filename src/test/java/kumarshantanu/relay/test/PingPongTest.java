@@ -22,7 +22,7 @@ public class PingPongTest {
 	public void test() {
 		Assert.assertTrue("Test started", true);
 		ExecutorService threadPool = Util.newThreadPool();
-		DefaultAgent ag = new DefaultAgent(threadPool);
+		DefaultAgent ag = new DefaultAgent(threadPool, Util.optimumThreadCount());
 		PingActor ping = new PingActor();
 		ag.register(ping);
 		PongActor pong = new PongActor();

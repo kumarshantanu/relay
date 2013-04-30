@@ -47,7 +47,7 @@ public class JMSMailboxTest {
 		context = createContext(amq.session, amq.queueName);
 		h = new Helper();
 		threadPool = Util.newThreadPool();
-		ag = new DefaultAgent(threadPool);
+		ag = new DefaultAgent(threadPool, Util.optimumThreadCount());
 		serde = new JMSMessageSerializer<String>() {
 			public Message serialize(String message) throws JMSException {
 				return amq.session.createTextMessage(message);
