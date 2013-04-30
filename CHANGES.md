@@ -7,8 +7,11 @@
 * PriorityAgent with Agent.onSend(ActorID) sig for
 * AmqpMailboxTest to demonstrate AMQP queue based mailboxes
 * A way for local and remote actors to be supervised
+* A way for supervisors to talk to each other on different hosts/JVMs
+* An actor/fn that accepts ResponseFuture<T> and blocks (w/timeout) until done
 
-## 2013-Jan-?? / 0.1.0
+
+## 2013-May-?? / 0.1.0
 
 * Abstractions
   * Actor (Lifecycle aware)
@@ -23,5 +26,4 @@
   * PollingActor    - actor without a mailbox; polls to find next job
   * DefaultMailbox  - local mailbox, used by DefaultActor
   * JMSMailbox      - JMS based mailbox (tested with embedded ActiveMQ broker)
-  * JMSActor        - actor that uses JMSMailbox for message passing
 * [TODO] Documentation
